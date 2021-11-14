@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="297mm" height="210mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 29700 21000"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil2 {fill:#78A6C8}
+    .fil0 {fill:#E9EEF2}
+    .fil1 {fill:url(#id0)}
+   ]]>
+  </style>
+  <linearGradient id="id0" gradientUnits="userSpaceOnUse" x1="8046.24" y1="9916.47" x2="33737.08" y2="9916.38">
+   <stop offset="0" style="stop-opacity:1; stop-color:#326789"/>
+   <stop offset="0.490196" style="stop-opacity:1; stop-color:#8C626C"/>
+   <stop offset="1" style="stop-opacity:1; stop-color:#E65C4F"/>
+  </linearGradient>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <g id="_2318859728080">
+   <path class="fil0" d="M15143.75 14261.12c462.19,0 840.29,378.1 840.29,840.29l0 1158.43c0,462.19 -378.1,840.29 -840.29,840.29l56.84 0c2310.95,0 4201.68,-1890.72 4201.68,-4201.68l0 -1158.31 0 -3475.06c0,-1386.58 -1134.41,-2520.99 -2520.99,-2520.99l-3475.06 0c-1386.57,0 -2520.98,1134.41 -2520.98,2520.99l0 3475.06c0,1386.57 1134.41,2520.98 2520.98,2520.98l579.1 0 1158.43 0z"/>
+   <path class="fil1" d="M10885.25 10002.61l0 -1737.52c0,-1386.59 1134.4,-2520.99 2520.96,-2520.99l1737.55 0 1737.52 0c1386.57,0 2520.99,1134.4 2520.99,2520.99l0 1737.52 0 1737.52 0 1158.31c0,2310.96 -1890.73,4201.69 -4201.68,4201.69l2839 0c2310.96,0 4201.69,-1890.73 4201.69,-4201.69l0 -2895.83 0 -56.85 0 -2839c0,-2310.96 -1890.73,-4201.67 -4201.69,-4201.67l-2839 0 -56.83 0 -56.85 0 -2839 0c-2310.96,0 -4201.67,1890.71 -4201.67,4201.67l0 2895.85 0 56.83 0 2839c0,2310.96 1890.71,4201.69 4201.67,4201.69l1737.42 0 1158.43 0c462.17,0 840.29,-378.09 840.29,-840.29l0 -1158.43c0,-462.2 -378.12,-840.29 -840.29,-840.29l-1158.43 0 -579.12 0c-1386.56,0 -2520.96,-1134.42 -2520.96,-2520.99l0 -1737.52z"/>
+   <g>
+    <rect class="fil2" x="11837.3" y="9206.01" width="1593.19" height="1593.19" rx="572.5" ry="572.5"/>
+    <rect class="fil2" x="14347.16" y="9206.01" width="1593.19" height="1593.19" rx="572.5" ry="572.5"/>
+    <rect class="fil2" x="16857.04" y="9206.01" width="1593.19" height="1593.19" rx="572.5" ry="572.5"/>
+   </g>
+  </g>
+ </g>
+</svg>

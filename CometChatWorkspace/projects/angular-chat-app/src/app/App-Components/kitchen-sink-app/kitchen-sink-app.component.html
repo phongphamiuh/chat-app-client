@@ -1,0 +1,111 @@
+<div class="bg-container">
+  <div class="wrapperStyle">
+    <p *ngIf="onLoginError" class="errorStyle">{{ errorMsg }}</p>
+    <p class="titleStyle">Chat Application</p>
+    <img src="../../../assets/img/logo-chat-app.jpg" alt="Fail">
+    <!-- <p class="subtitleStyle">Login with one of our sample users</p>
+  
+    <div class="userContainerStyle">
+      <div class="userWrapperStyle" (click)="onLogin('superhero1')">
+        <div class="thumbnailWrapperStyle">
+          <cometchat-avatar [avatar]="superHero1"></cometchat-avatar>
+        </div>
+        <p>superhero1</p>
+      </div>
+      <div class="userWrapperStyle" (click)="onLogin('superhero2')">
+        <div class="thumbnailWrapperStyle">
+          <cometchat-avatar [avatar]="superHero2"></cometchat-avatar>
+        </div>
+        <p>superhero2</p>
+      </div>
+      <div class="userWrapperStyle" (click)="onLogin('superhero3')">
+        <div class="thumbnailWrapperStyle">
+          <cometchat-avatar [avatar]="superHero3"></cometchat-avatar>
+        </div>
+        <p>superhero3</p>
+      </div>
+      <div class="userWrapperStyle" (click)="onLogin('superhero4')">
+        <div class="thumbnailWrapperStyle">
+          <cometchat-avatar [avatar]="superHero4"></cometchat-avatar>
+        </div>
+        <p>superhero4</p>
+      </div>
+      <div class="userWrapperStyle" (click)="onLogin('superhero5')">
+        <div class="thumbnailWrapperStyle">
+          <cometchat-avatar [avatar]="superHero5"></cometchat-avatar>
+        </div>
+        <p>superhero5</p>
+      </div>
+    </div> -->
+  
+    <!-- <div class="uidWrapperStyle">
+      <div>
+        <p class="subtitleStyle">Nhập thông tin đăng nhập</p>
+      </div>
+      <div class="inputWrapperStyle">
+        <input
+          type="text"
+          placeholder="Email"
+          [(ngModel)]="userEmail"
+        />
+      </div>
+      <div class="inputWrapperStyle">
+        <input
+          type="text"
+          placeholder="Mật khẩu"
+          [(ngModel)]="userPassword"
+        />
+      </div>
+      <div class="loginBtn">
+        <button type="button" (click)="onLogin(userEmail,userPassword)">Đăng nhập</button>
+      </div>
+    </div> -->
+
+    <div class="login-form">
+        <form [formGroup]="loginForm" (ngSubmit) = "onLogin()">
+          <div class="form-group">
+            <label>Email</label>
+            <input
+              type="text"
+              formControlName="email"
+              class="form-control"
+              id="email"
+            />
+            <div *ngIf="f.email.errors && isValidFormSubmitted != null && !isValidFormSubmitted" [ngClass] = "'error'"> 
+              <div *ngIf="f.email.errors.required">
+                Yêu cầu nhập email
+              </div>  
+              <!-- <div *ngIf="f.email.errors.email">
+                Email phải hợp lệ
+              </div>  -->
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Passsword</label>
+            <input
+              type="password"
+              formControlName="password"
+              class="form-control"
+              id="password"
+            />
+            <div *ngIf="f.password.errors && isValidFormSubmitted != null && !isValidFormSubmitted" [ngClass] = "'error'"> 
+              <div *ngIf="f.password.errors.required">
+                Yêu cầu nhập password
+              </div>  
+              <div *ngIf="f.password.errors.minlength">
+                Password phải có ít nhất 6 ký tự
+              </div> 
+            </div>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Login</button>
+          </div>
+        </form>
+    </div>
+    
+    <div class="register">
+      <p>Bạn chưa có tài khoản? <a routerLink="/register">Đăng ký</a></p>
+    </div>
+  </div>
+  
+</div>
