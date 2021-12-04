@@ -3,15 +3,15 @@
     <!-- TOOL TIP -->
     <div class="avatarStyle">
       <cometchat-avatar
-        [item]="member"
+        [item]="userMember"
         [userStatus]="member?.status"
       ></cometchat-avatar>
     </div>
 
-    <div class="nameStyle" *ngIf="loggedInUser?.uid !== member?.uid">
-      {{ member?.name }}
+    <div class="nameStyle" *ngIf="loggedInUser?.id_user !== member?.id_user">
+      {{ nameMember }}
     </div>
-    <div class="nameStyle" *ngIf="loggedInUser?.uid == member?.uid">
+    <div class="nameStyle" *ngIf="loggedInUser?.id_user == member?.id_user">
       {{ YOU }}
     </div>
   </td>
@@ -19,7 +19,7 @@
     <!-- Change Scope Below -->
 
     <!-- class="scopeWrapperStyle" -->
-    <div *ngIf="showChangeScope">
+    <!-- <div *ngIf="showChangeScope">
       <select class="scopeSelectionStyle" (change)="scopeChangeHandler($event)">
         <option
           *ngFor="let currentRoleCode of roleCodes"
@@ -37,13 +37,13 @@
         [src]="closeIcon"
         loading="lazy"
       />
-    </div>
+    </div> -->
 
     <!-- Change Scope Above -->
 
     <!-- Current Scope -->
     <span class="roleStyle" *ngIf="!showChangeScope">
-      {{ member?.scope }}
+      {{ member?.role }}
     </span>
     <img
       *ngIf="!showChangeScope && hasGreaterRole"
@@ -53,9 +53,8 @@
     />
     <!-- Current Scope -->
   </td>
-  <td class="actionColumnStyle">
+  <!-- <td class="actionColumnStyle">
     <span>
-      <!-- ban icon -->
       <img
         *ngIf="hasGreaterRole"
         (click)="banMember()"
@@ -63,16 +62,20 @@
         loading="lazy"
       />
     </span>
-  </td>
+  </td> -->
   <td class="actionColumnStyle">
     <span>
       <!-- kick icon -->
-      <img
+      <button *ngIf="member?.role != 'admin'"
+      (click)="kickMember()">
+      Mời ra khỏi nhóm
+      </button>
+      <!-- <img
         *ngIf="hasGreaterRole"
         (click)="kickMember()"
         [src]="kickIcon"
         loading="lazy"
-      />
+      /> -->
     </span>
   </td>
 </tr>

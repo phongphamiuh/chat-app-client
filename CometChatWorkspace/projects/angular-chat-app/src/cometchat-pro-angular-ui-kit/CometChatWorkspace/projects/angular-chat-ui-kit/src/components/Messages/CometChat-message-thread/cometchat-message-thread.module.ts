@@ -11,8 +11,6 @@ import { CometChatSenderImageMessageBubble } from "../CometChat-sender-image-mes
 import { CometChatReceiverImageMessageBubble } from "../CometChat-receiver-image-message-bubble/cometchat-receiver-image-message-bubble.module";
 import { CometChatSenderVideoMessageBubble } from "../CometChat-sender-video-message-bubble/cometchat-sender-video-message-bubble.module";
 import { CometChatReceiverVideoMessageBubble } from "../CometChat-receiver-video-message-bubble/cometchat-receiver-video-message-bubble.module";
-import { CometChatSenderAudioMessageBubble } from "../CometChat-sender-audio-message-bubble/cometchat-sender-audio-message-bubble.module";
-import { CometChatReceiverAudioMessageBubble } from "../CometChat-receiver-audio-message-bubble/cometchat-receiver-audio-message-bubble.module";
 import { CometChatSenderStickerMessageBubble } from "../Extensions/CometChat-sender-sticker-message-bubble/cometchat-sender-sticker-message-bubble.module";
 import { CometChatReceiverStickerMessageBubble } from "../Extensions/CometChat-receiver-sticker-message-bubble/cometchat-receiver-sticker-message-bubble.module";
 import { CometChatSenderPollMessageBubble } from "../Extensions/CometChat-sender-poll-message-bubble/cometchat-sender-poll-message-bubble.module";
@@ -28,8 +26,6 @@ import { CometChatReceiverPollMessageBubble } from "../Extensions/CometChat-rece
     CometChatReceiverFileMessageBubble,
     CometChatSenderImageMessageBubble,
     CometChatReceiverImageMessageBubble,
-    CometChatSenderAudioMessageBubble,
-    CometChatReceiverAudioMessageBubble,
     CometChatSenderVideoMessageBubble,
     CometChatReceiverVideoMessageBubble,
     CometChatMessageList,

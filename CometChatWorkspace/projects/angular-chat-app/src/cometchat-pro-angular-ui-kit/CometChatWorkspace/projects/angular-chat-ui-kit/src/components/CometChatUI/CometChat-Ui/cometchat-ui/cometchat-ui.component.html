@@ -28,9 +28,6 @@
     >
     </cometchat-messages>
   </div>
-  <div>
-    <button (click)="clicktest($event)">Click</button>
-  </div>
   <!--Detail Screen-->
   <div
     class="unifiedSecondaryStyle"
@@ -59,14 +56,14 @@
       ></cometchat-group-details>
     </div>
 
-    <cometchat-message-thread
+    <!-- <cometchat-message-thread
       *ngIf="threadMessageView"
       [item]="threadMessageItem"
       [type]="threadMessageType"
       [parentMessage]="threadMessageParent"
       [loggedInUser]="loggedInUser"
       (actionGenerated)="actionHandler($event)"
-    ></cometchat-message-thread>
+    ></cometchat-message-thread> -->
   </div>
 
   <cometchat-image-viewer

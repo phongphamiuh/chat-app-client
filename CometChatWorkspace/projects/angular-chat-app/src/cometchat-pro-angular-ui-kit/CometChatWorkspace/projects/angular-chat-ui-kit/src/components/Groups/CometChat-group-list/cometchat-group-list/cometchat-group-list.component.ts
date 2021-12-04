@@ -13,6 +13,9 @@ import { CometChat } from "@cometchat-pro/chat";
 import * as enums from "../../../../utils/enums";
 import { COMETCHAT_CONSTANTS } from "../../../../utils/messageConstants";
 import { logger } from "../../../../utils/common";
+import { MessageService } from "../../../Messages/Message-Service/message.service";
+import { UserService } from "../../../Users/User-Service/user.service";
+import { LocalStorageService } from "../../../Out-Service/local-storage.service";
 
 @Component({
   selector: "cometchat-group-list",
@@ -41,7 +44,10 @@ export class CometChatGroupListComponent
 
   @Output() onGroupClick: EventEmitter<any> = new EventEmitter();
 
-  constructor(private ref: ChangeDetectorRef) {
+  constructor(private ref: ChangeDetectorRef,
+    private messageService: MessageService,
+     private userService: UserService,
+     private localStorageService: LocalStorageService) {
     setInterval(() => {
       if (!this.ref[enums.DESTROYED]) {
         this.ref.detectChanges();
@@ -276,37 +282,67 @@ export class CometChatGroupListComponent
    */
   getGroups = () => {
     try {
+
       this.decoratorMessage = COMETCHAT_CONSTANTS.LOADING_MESSSAGE;
+      var uid = this.localStorageService.get("uid"
+      )
+      this.userService.getUserById1(uid).subscribe(user => {
+        this.loggedInUser = user;
+        this.userService.getGroupByUserId(user.id_user).subscribe(groupList => {
+          if (groupList.length === 0) {
+            this.decoratorMessage = COMETCHAT_CONSTANTS.NO_GROUPS_FOUND;
+          }
 
-      CometChat.getLoggedinUser()
-        .then((user) => {
-          this.loggedInUser = user;
-          this.fetchNextGroups()
-            .then((groupList) => {
-              if (groupList.length === 0) {
-                this.decoratorMessage = COMETCHAT_CONSTANTS.NO_GROUPS_FOUND;
-              }
+          this.groupList = [...this.groupList, ...groupList];
 
-              this.groupList = [...this.groupList, ...groupList];
+          this.decoratorMessage = "";
 
-              this.decoratorMessage = "";
-
-              if (this.groupList.length === 0) {
-                this.decoratorMessage = COMETCHAT_CONSTANTS.NO_GROUPS_FOUND;
-              }
-            })
-            .catch((error) => {
-              this.decoratorMessage = COMETCHAT_CONSTANTS.ERROR;
+          if (this.groupList.length === 0) {
+            this.decoratorMessage = COMETCHAT_CONSTANTS.NO_GROUPS_FOUND;
+          }
+        },error => {
+          this.decoratorMessage = COMETCHAT_CONSTANTS.ERROR;
               logger(
                 "[CometChatGroupList] getGroups fetchNextGroups error",
                 error
-              );
-            });
+            );
         })
-        .catch((error) => {
-          this.decoratorMessage = COMETCHAT_CONSTANTS.ERROR;
+      },error => {
+        this.decoratorMessage = COMETCHAT_CONSTANTS.ERROR;
           logger("[CometChatGroupList] getUsers getLoggedInUser error", error);
-        });
+      })
+
+      // CometChat.getLoggedinUser()
+      //   .then((user) => {
+      //     this.loggedInUser = user;
+      //     this.fetchNextGroups()
+      //       .then((groupList) => {
+      //         if (groupList.length === 0) {
+      //           this.decoratorMessage = COMETCHAT_CONSTANTS.NO_GROUPS_FOUND;
+      //         }
+
+      //         this.groupList = [...this.groupList, ...groupList];
+
+      //         this.decoratorMessage = "";
+
+      //         if (this.groupList.length === 0) {
+      //           this.decoratorMessage = COMETCHAT_CONSTANTS.NO_GROUPS_FOUND;
+      //         }
+      //       })
+      //       .catch((error) => {
+      //         this.decoratorMessage = COMETCHAT_CONSTANTS.ERROR;
+      //         logger(
+      //           "[CometChatGroupList] getGroups fetchNextGroups error",
+      //           error
+      //         );
+      //       });
+      //   })
+      //   .catch((error) => {
+      //     this.decoratorMessage = COMETCHAT_CONSTANTS.ERROR;
+      //     logger("[CometChatGroupList] getUsers getLoggedInUser error", error);
+      //   });
+
+
     } catch (error) {
       logger(error);
     }

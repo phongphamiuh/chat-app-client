@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { CometChatGroupListWithMessagesComponent } from "./cometchat-group-list-with-messages/cometchat-group-list-with-messages.component";
 import { CometChatGroupList } from "../CometChat-group-list/cometchat-group-list.module";
 import { CometChatMessages } from "../../Messages/CometChat-messages/cometchat-messages.module";
-import { CometChatMessageThread } from "../../Messages/CometChat-message-thread/cometchat-message-thread.module";
+//import { CometChatMessageThread } from "../../Messages/CometChat-message-thread/cometchat-message-thread.module";
 
 import { CometChatImageViewer } from "../../Messages/CometChat-image-viewer/cometchat-image-viewer.module";
 import { CometChatGroupDetails } from "../CometChat-group-details/cometchat-group-details.module";
@@ -18,7 +18,7 @@ import { CometChatOutgoingCall } from "../../Calls/CometChat-outgoing-call/comet
     CommonModule,
     CometChatGroupList,
     CometChatMessages,
-    CometChatMessageThread,
+    //CometChatMessageThread,
     CometChatGroupDetails,
     CometChatImageViewer,
     CometChatIncomingCall,

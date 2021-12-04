@@ -14,10 +14,10 @@
     [replyPreview]="replyPreview"
     (actionGenerated)="actionHandler($event)"
   ></cometchat-smart-reply-preview>
-  <cometchat-sticker-keyboard
+  <!-- <cometchat-sticker-keyboard
     (actionGenerated)="actionHandler($event)"
     *ngIf="stickerViewer"
-  ></cometchat-sticker-keyboard>
+  ></cometchat-sticker-keyboard> -->
   <div class="blockedUserPopup" *ngIf="userBlocked">
     <p>You have blocked this contact</p>
     <p>
@@ -75,12 +75,12 @@
               (change)="onImgChange($event)"
             />
           </span>
+          
           <span
             [title]="ATTACH_FILE"
             (click)="getFile()"
             class="fileItemStyle"
-            id="file"
-          >
+            id="file">
             <input
               type="file"
               accept="file/*"
@@ -104,13 +104,12 @@
             class="stickerBtnStyle"
             title="Add Sticker"
             (click)="toggleStickerPicker()"
-            >&nbsp;</span
+            >&nbsp;</spanuid
           > -->
           <span
             class="emojiButtonStyle"
             [title]="ADD_EMOJI"
-            (click)="toggleEmoji()"
-          >
+            (click)="toggleEmoji()">
           </span>
           <emoji-mart
             (emojiSelect)="addEmoji($event)"

@@ -10,6 +10,9 @@ import { CometChat } from "@cometchat-pro/chat";
 import * as enums from "../../../../utils/enums";
 import { COMETCHAT_CONSTANTS } from "../../../../utils/messageConstants";
 import { logger } from "../../../../utils/common";
+import { LocalStorageService } from "../../../Out-Service/local-storage.service";
+import { GroupService } from "../../Group-Service/group.service";
+import { UserService } from "../../../Users/User-Service/user.service";
 
 @Component({
   selector: "cometchat-group-details",
@@ -52,9 +55,23 @@ export class CometChatGroupDetailsComponent implements OnInit, OnDestroy {
   VIEW_MEMBERS: String = COMETCHAT_CONSTANTS.VIEW_MEMBERS;
   DETAILS: String = COMETCHAT_CONSTANTS.DETAILS;
 
-  constructor() {}
+  constructor(private localStorageService: LocalStorageService,
+    private groupService: GroupService,
+    private userService: UserService) {}
 
   ngOnInit() {
+
+    var uid = this.localStorageService.get("uid")
+    this.userService.getUserById1(uid).subscribe(user => {
+      this.loggedInUser = user
+    })
+
+    // {"id_chatroom":"group1","create_date":null,"is_group_chat":0,"id_admin":null,
+    // "message_newest":"hello","datetime_newest":null,
+    // "name":"Group Chat","url_ava_chatroom":"a","status":"online"}
+
+    console.log("item in group :" + JSON.stringify(this.item))
+
     try {
       this.groupMemberRequest = this.createGroupMemberRequest(this.item.guid);
       this.getGroupMembers();
@@ -64,7 +81,9 @@ export class CometChatGroupDetailsComponent implements OnInit, OnDestroy {
       );
       this.getBannedGroupMembers();
 
-      this.currentMemberScope = this.checkMemberScope(this.item);
+      //this.currentMemberScope = this.checkMemberScope(this.item);
+
+      this.currentMemberScope = this.customCheckMemberScope(this.item.id_admin);
 
       this.addEventListeners(this.groupUpdated);
     } catch (error) {
@@ -254,41 +273,52 @@ export class CometChatGroupDetailsComponent implements OnInit, OnDestroy {
     try {
       const administratorsList = [],
         moderatorsList = [];
-      CometChat.getLoggedinUser()
-        .then((user) => {
-          this.loggedInUser = user;
-          this.fetchNextGroupMembers()
-            .then((groupMembers) => {
-              groupMembers.forEach((member) => {
-                if (member.scope === CometChat.GROUP_MEMBER_SCOPE.ADMIN) {
-                  administratorsList.push(member);
-                }
 
-                if (member.scope === CometChat.GROUP_MEMBER_SCOPE.MODERATOR) {
-                  moderatorsList.push(member);
-                }
-              });
+        console.log('item .............' + JSON.stringify(this.item))
+      this.groupService.getAllMemberByGroupId(this.item.id_chatroom).subscribe(groupMembers => {
+        this.memberList = [...this.memberList, ...groupMembers];
+      },error => {
+        logger(
+          "[CometChatGroupDetail] getGroupMembers getLoggedInUser error",
+          error
+        );
+      })
 
-              this.memberList = [...this.memberList, ...groupMembers];
-              this.administratorsList = [
-                ...this.administratorsList,
-                ...administratorsList,
-              ];
-              this.moderatorsList = [...this.moderatorsList, ...moderatorsList];
-            })
-            .catch((error) => {
-              logger(
-                "[CometChatGroupDetail] getGroupMembers fetchNextGroupMembers error",
-                error
-              );
-            });
-        })
-        .catch((error) => {
-          logger(
-            "[CometChatGroupDetail] getGroupMembers getLoggedInUser error",
-            error
-          );
-        });
+      // CometChat.getLoggedinUser()
+      //   .then((user) => {
+      //     this.loggedInUser = user;
+      //     this.fetchNextGroupMembers()
+      //       .then((groupMembers) => {
+      //         groupMembers.forEach((member) => {
+      //           if (member.scope === CometChat.GROUP_MEMBER_SCOPE.ADMIN) {
+      //             administratorsList.push(member);
+      //           }
+
+      //           if (member.scope === CometChat.GROUP_MEMBER_SCOPE.MODERATOR) {
+      //             moderatorsList.push(member);
+      //           }
+      //         });
+
+      //         this.memberList = [...this.memberList, ...groupMembers];
+      //         this.administratorsList = [
+      //           ...this.administratorsList,
+      //           ...administratorsList,
+      //         ];
+      //         this.moderatorsList = [...this.moderatorsList, ...moderatorsList];
+      //       })
+      //       .catch((error) => {
+      //         logger(
+      //           "[CometChatGroupDetail] getGroupMembers fetchNextGroupMembers error",
+      //           error
+      //         );
+      //       });
+      //   })
+      //   .catch((error) => {
+      //     logger(
+      //       "[CometChatGroupDetail] getGroupMembers getLoggedInUser error",
+      //       error
+      //     );
+      //   });
     } catch (error) {
       logger(error);
     }
@@ -321,6 +351,8 @@ export class CometChatGroupDetailsComponent implements OnInit, OnDestroy {
       if (this.item.scope === CometChat.GROUP_MEMBER_SCOPE.PARTICIPANT) {
         return false;
       }
+
+
 
       CometChat.getLoggedinUser()
         .then((user) => {
@@ -490,20 +522,37 @@ export class CometChatGroupDetailsComponent implements OnInit, OnDestroy {
    */
   addParticipants = (members, triggerUpdate = true) => {
     try {
-      const memberList = [...this.memberList, ...members];
 
-      this.memberList = memberList;
+      this.groupService.getAllMemberByGroupId(this.item.id_chatroom).subscribe(members1 => {
 
-      this.actionGenerated.emit({
-        type: enums.MEMBERS_ADDED,
-        payLoad: members,
-      });
-      if (triggerUpdate) {
+
+       // members1.filter(member => member == )
+
+        this.memberList = []
+        const memberList = [...this.memberList, ...members1];
+        this.memberList = memberList;
+
+
         this.actionGenerated.emit({
-          type: enums.MEMBERS_UPDATED,
-          payLoad: { item: this.item, count: memberList.length },
+          type: enums.MEMBERS_ADDED,
+          payLoad: members,
         });
-      }
+        if (triggerUpdate) {
+          this.actionGenerated.emit({
+            type: enums.MEMBERS_UPDATED,
+            payLoad: { item: this.item, count: memberList.length },
+          });
+        }
+
+
+      })
+
+      // const memberList = [...this.memberList, ...members];
+
+      // console.log("member list ......................." + JSON.stringify(memberList))
+      // this.memberList = memberList;
+
+      
     } catch (error) {
       logger(error);
     }
@@ -545,8 +594,9 @@ export class CometChatGroupDetailsComponent implements OnInit, OnDestroy {
   removeParticipants = (member, triggerUpdate = true) => {
     try {
       const groupmembers = [...this.memberList];
+
       const filteredMembers = groupmembers.filter((groupmember) => {
-        if (groupmember.uid === member.uid) {
+        if (groupmember.id_user === member.id_user) {
           return false;
         }
         return true;
@@ -648,8 +698,8 @@ export class CometChatGroupDetailsComponent implements OnInit, OnDestroy {
   checkMemberScope = (group) => {
     try {
       //group.scope is key which holds the role of the current user in this group
-
-      if (group.scope == COMETCHAT_CONSTANTS.OWNER) {
+      
+      if (group == COMETCHAT_CONSTANTS.OWNER) {
         return this.ADMIN;
       }
 
@@ -658,6 +708,32 @@ export class CometChatGroupDetailsComponent implements OnInit, OnDestroy {
       } else if (group.scope == CometChat.GROUP_MEMBER_SCOPE.MODERATOR) {
         return this.MODERATOR;
       } else {
+        return this.PARTICIPANT;
+      }
+    } catch (error) {
+      logger(error);
+    }
+  };
+
+  /**
+   * Returns the role/scope that the current user has , for the group that is currently opened
+   * @param Any member
+   */
+   customCheckMemberScope = (idAdmin) => {
+    try {
+      //group.scope is key which holds the role of the current user in this group
+      var uidOfUserLogin = this.localStorageService.get("uid")
+
+      if (idAdmin == uidOfUserLogin) {
+        return this.ADMIN;
+      }
+
+      // if (idAdmin.scope == CometChat.GROUP_MEMBER_SCOPE.ADMIN) {
+      //   return this.ADMIN;
+      // } else if (idAdmin.scope == CometChat.GROUP_MEMBER_SCOPE.MODERATOR) {
+      //   return this.MODERATOR;
+      // } 
+      else {
         return this.PARTICIPANT;
       }
     } catch (error) {

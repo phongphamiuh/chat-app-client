@@ -92,14 +92,12 @@ export class CometChatMessageListComponent
      private localStorageService: LocalStorageService) {
     try {
 
-
       this.subscription = this.messageService.getMessage().subscribe(message => { 
         this.actionGenerated.emit({
           type: enums.MESSAGE_RECEIVED,
           payLoad: [message],
         });
       });
-
 
       setInterval(() => {
         if (!this.ref[enums.DESTROYED]) {
@@ -558,11 +556,13 @@ export class CometChatMessageListComponent
       //  mycode
      
       var uid = this.localStorageService.get("uid")
-      this.userService.getUserById(uid).subscribe(user => {
+      this.userService.getUserById1(uid).subscribe(user => {
         this.loggedInUser = user;
         var uid = this.localStorageService.get("uid")
-        this.messageService.getAllMessageByIdChatRoom1(this.item.id_chatroom).subscribe(messageList => {
 
+        this.messageService.getAllMessageByIdChatRoom(this.item.id_chatroom).subscribe(messageResponse => {
+          var messageList = messageResponse.Data[0].content
+          
           if (messageList.length === 0 && this.messages.length === 0) {
             this.decoratorMessage = COMETCHAT_CONSTANTS.NO_MESSAGES_FOUND;
           } else {
@@ -647,10 +647,99 @@ export class CometChatMessageListComponent
           type: enums.NEW_CONVERSATION_OPENED,
           payLoad: messageList,
         });
-
-        },error => {
-          logger("Message fetching failed with error:", error);
         })
+
+        // this.messageService.getAllMessageByIdChatRoom1(this.item.id_chatroom).subscribe(messageList => {
+        //   console.log("message List = ===================" + JSON.stringify(messageList))
+        //   if (messageList.length === 0 && this.messages.length === 0) {
+        //     this.decoratorMessage = COMETCHAT_CONSTANTS.NO_MESSAGES_FOUND;
+        //   } else {
+        //     this.decoratorMessage = "";
+        //   }
+
+        //   messageList.forEach((message) => {
+        //   if (
+        //     // message.category === CometChat.CATEGORY_ACTION &&
+        //     // message.sender === enums.APP_SYSTEM
+
+        //     message.id_send === enums.APP_SYSTEM
+        //   ) {
+        //     actionMessages.push(message);
+        //   }
+
+        //   //if the sender of the message is not the loggedin user, mark it as read.
+        //   // if (
+        //   //   message.sender !== user.uid &&
+        //   //   !message.getReadAt()
+        //   // ) {
+        //   //   if (
+        //   //     message.receiverType === CometChat.RECEIVER_TYPE.USER
+        //   //   ) {
+        //   //     CometChat.markAsRead(
+        //   //       message.getId().toString(),
+        //   //       message.getSender().getUid(),
+        //   //       message.getReceiverType()
+        //   //     );
+        //   //   } else if (
+        //   //     message.getReceiverType() === CometChat.RECEIVER_TYPE.GROUP
+        //   //   ) {
+        //   //     CometChat.markAsRead(
+        //   //       message.getId().toString(),
+        //   //       message.getReceiverId(),
+        //   //       message.getReceiverType()
+        //   //     );
+        //   //   }
+
+        //   //   this.actionGenerated.emit({
+        //   //     type: enums.MESSAGE__READ,
+        //   //     payLoad: message,
+        //   //   });
+        //   // }
+
+        // });
+
+        // ++this.times;
+
+        // let actionGeneratedType = enums.MESSAGE_FETCHED;
+        // if (scrollToBottom === true) {
+        //   actionGeneratedType = enums.MESSAGE_FETCHED_AGAIN;
+        // }
+
+        // if (scrollToTop) {
+        //   actionGeneratedType = enums.OLDER_MESSAGES_FETCHED;
+        // }
+
+        // // Only called when the active user changes the the conversation , that is switches to some other person
+        // // to chat with
+        // if (newConversation) {
+        //   actionGeneratedType = enums.NEW_CONVERSATION_OPENED;
+        // }
+
+        // if (
+        //   (this.times === 1 && actionMessages.length > 5) ||
+        //   (this.times > 1 && actionMessages.length === 30)
+        // ) {
+        //   this.actionGenerated.emit({
+        //     type: enums.MESSAGE_FETCHED,
+        //     payLoad: messageList,
+        //   });
+        //   this.getMessages(true, false);
+        // } else {
+        //   this.actionGenerated.emit({
+        //     type: actionGeneratedType,
+        //     payLoad: messageList,
+        //   });
+        // }
+
+        // this.actionGenerated.emit({
+        //   type: enums.NEW_CONVERSATION_OPENED,
+        //   payLoad: messageList,
+        // });
+
+        // },error => {
+        //   logger("Message fetching failed with error:", error);
+        // })
+
       },error => {
         logger("No Logged In User Found", { error });
       })

@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 
 const apiUrl = 'http://localhost:8080/conversations';
 
+const apiChatRoom = 'http://localhost:3000/Chatroom';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,6 +18,8 @@ export class ConversationService {
   getAllConversation(): Observable<Conversation[]> {
     return this.httpClient.get<Conversation[]>(apiUrl).pipe()
   }
+
+ 
 }
 
 export class Conversation {

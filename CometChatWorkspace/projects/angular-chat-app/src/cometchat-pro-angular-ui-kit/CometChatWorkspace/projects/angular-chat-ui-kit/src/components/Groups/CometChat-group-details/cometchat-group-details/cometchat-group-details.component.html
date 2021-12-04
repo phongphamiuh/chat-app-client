@@ -27,11 +27,11 @@
         class="sectionContentStyle"
         *ngIf="currentMemberScope == ADMIN || currentMemberScope == MODERATOR"
       >
-        <div class="contentItemStyle">
+        <!-- <div class="contentItemStyle">
           <div class="itemLinkStyle" (click)="toggleBanMember()">
             {{ BANNED_MEMBERS }}
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <!-- MEMBER SECTION ABOVE-->
@@ -47,7 +47,7 @@
         </div>
       </div>
 
-      <div class="sectionContentStyle" *ngIf="currentMemberScope == ADMIN">
+      <!-- <div class="sectionContentStyle" *ngIf="currentMemberScope == ADMIN">
         <div class="contentItemStyle">
           <div
             class="itemLinkStyle itemDeleteLinkStyle"
@@ -56,7 +56,7 @@
             {{ DELETE_AND_EXIT }}
           </div>
         </div>
-      </div>
+      </div> -->
       <!-- SHARED MEDIA SECTION BELOW-->
       <div class="sharedMedia">
         <cometchat-shared-media

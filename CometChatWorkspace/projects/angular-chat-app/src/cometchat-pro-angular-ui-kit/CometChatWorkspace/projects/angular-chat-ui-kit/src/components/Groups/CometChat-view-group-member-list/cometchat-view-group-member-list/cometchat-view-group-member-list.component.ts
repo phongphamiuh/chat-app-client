@@ -3,6 +3,7 @@ import { CometChat } from "@cometchat-pro/chat";
 import * as enums from "../../../../utils/enums";
 import { COMETCHAT_CONSTANTS } from "../../../../utils/messageConstants";
 import { logger } from "../../../../utils/common";
+import { GroupService } from "../../Group-Service/group.service";
 @Component({
   selector: "cometchat-view-group-member-list",
   templateUrl: "./cometchat-view-group-member-list.component.html",
@@ -23,7 +24,7 @@ export class CometChatViewGroupMemberListComponent implements OnInit {
 
   @Output() actionGenerated: EventEmitter<any> = new EventEmitter();
 
-  constructor() {}
+  constructor(private groupServide: GroupService) {}
 
   ngOnInit() {}
 
@@ -113,19 +114,29 @@ export class CometChatViewGroupMemberListComponent implements OnInit {
   kickMember = (memberToKick) => {
     try {
       const guid = this.item.guid;
-      CometChat.kickGroupMember(guid, memberToKick.uid)
-        .then((response) => {
-          if (response) {
-            logger("kickGroupMember success with response: ", response);
-            this.actionGenerated.emit({
-              type: enums.REMOVE_GROUP_PARTICIPANTS,
-              payLoad: memberToKick,
-            });
-          }
-        })
-        .catch((error) => {
-          logger("kickGroupMember failed with error: ", error);
+      this.groupServide.kickMember(memberToKick.id_chatgroup, memberToKick.id_user).subscribe(res => {
+        this.actionGenerated.emit({
+          type: enums.REMOVE_GROUP_PARTICIPANTS,
+          payLoad: memberToKick,
         });
+      },error => {
+        logger(error);
+      })
+
+      // CometChat.kickGroupMember(guid, memberToKick.uid)
+      //   .then((response) => {
+      //     if (response) {
+      //       logger("kickGroupMember success with response: ", response);
+      //       this.actionGenerated.emit({
+      //         type: enums.REMOVE_GROUP_PARTICIPANTS,
+      //         payLoad: memberToKick,
+      //       });
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     logger("kickGroupMember failed with error: ", error);
+      //   });
+
     } catch (error) {
       logger(error);
     }

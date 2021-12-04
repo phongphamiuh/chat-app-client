@@ -8,6 +8,8 @@ import { RIGHT_TICK_ICON } from "./resources/rightTickIcon";
 import { CLOSE_ICON } from "./resources/closeIcon";
 import { COMETCHAT_CONSTANTS } from "../../../../utils/messageConstants";
 import { logger } from "../../../../utils/common";
+import { LocalStorageService } from "../../../Out-Service/local-storage.service";
+import { User, UserService } from "../../../Users/User-Service/user.service";
 @Component({
   selector: "cometchat-view-group-member-list-item",
   templateUrl: "./cometchat-view-group-member-list-item.component.html",
@@ -26,6 +28,9 @@ export class CometChatViewGroupMemberListItemComponent implements OnInit {
   roles = {};
   roleCodes = [];
   hasGreaterRole: boolean = false;
+  nameMember = null
+
+  userMember = null
 
   PARTICIPANT = CometChat.GROUP_MEMBER_SCOPE.PARTICIPANT;
   YOU: String = COMETCHAT_CONSTANTS.YOU;
@@ -36,10 +41,15 @@ export class CometChatViewGroupMemberListItemComponent implements OnInit {
   rightTick = RIGHT_TICK_ICON;
   closeIcon = CLOSE_ICON;
 
-  constructor() {}
+  constructor(private localStorage: LocalStorageService,
+    private userService: UserService) {}
 
   ngOnInit() {
     try {
+      this.userService.getUserById1(this.member.id_user).subscribe(user => {
+        this.userMember = user
+        this.nameMember = user.name
+      })      
       this.scope = this.member.scope;
 
       //checking if logged in user is owner

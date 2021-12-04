@@ -10,6 +10,8 @@ import {
 import * as enums from "../../../../utils/enums";
 import { COMETCHAT_CONSTANTS } from "../../../../utils/messageConstants";
 import { logger } from "../../../../utils/common";
+import { UserService } from "../../User-Service/user.service";
+import { LocalStorageService } from "../../../Out-Service/local-storage.service";
 @Component({
   selector: "cometchat-user-details",
   templateUrl: "./cometchat-user-details.component.html",
@@ -22,9 +24,11 @@ export class CometChatUserDetailsComponent implements OnInit, OnChanges {
 
   OPTIONS: String = COMETCHAT_CONSTANTS.OPTIONS;
   DETAILS: String = COMETCHAT_CONSTANTS.DETAILS;
-
+  DELETEFRIEND: String = COMETCHAT_CONSTANTS.DELETE_FRIEND;
   blockUserText: string;
-  constructor() {}
+  
+  constructor(private userService: UserService,
+              private localStorage: LocalStorageService) {}
 
   ngOnChanges(change: SimpleChanges) {
     try {
@@ -82,6 +86,15 @@ export class CometChatUserDetailsComponent implements OnInit, OnChanges {
       });
     } catch (error) {
       logger(error);
+    }
+  }
+
+  deleteUser(){
+    if(confirm("Bạn có chắc chắn muốn xóa không")) {
+      let uid = this.localStorage.get("uid")
+      this.userService.deleteFriend(uid, this.item.id_user).subscribe(message => {
+        window.location.reload()
+      })
     }
   }
 }

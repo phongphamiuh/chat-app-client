@@ -39,6 +39,17 @@
   background-color: #78A6C8;
 }
 
+.contactHeaderStyle1 {
+  padding: 5px 16px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #eaeaea;
+
+  /* mycode */
+  background-color: #78A6C8;
+}
+
 .contactHeaderTitleStyle {
   margin: 0;
   font-weight: 700;
@@ -47,6 +58,17 @@
   text-align: left;
   font-size: 20px;
 }
+
+
+.contactHeaderTitleStyle1 {
+  margin: 0;
+  font-weight: 700;
+  display: inline-block;
+  width: 66%;
+  text-align: left;
+  font-size: 14px;
+}
+
 
 .contactSearchStyle {
   padding: 16px 16px;

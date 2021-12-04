@@ -274,9 +274,9 @@ export class CometChatConversationListComponent implements OnInit, OnChanges {
   ngOnInit() {
     try {
 
-      this.conversationService.getAllConversation().subscribe(res => {
-        this.mconversationList = res
-      })
+      // this.conversationService.getAllConversation().subscribe(res => {
+      //   this.mconversationList = res
+      // })
 
       this.conversationRequest = new CometChat.ConversationsRequestBuilder()
         .setLimit(30)

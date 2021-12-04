@@ -39,6 +39,8 @@ export class CometChatUserListComponent
   contactsNotFound: Boolean = false;
   contacts = [];
   usersList = [];
+  filteredList = [];
+  userlist = [];
   usersRequest;
   timeout;
   defaultAvatarImage =
@@ -46,9 +48,9 @@ export class CometChatUserListComponent
 
   USERS: String = COMETCHAT_CONSTANTS.USERS;
   SEARCH: String = COMETCHAT_CONSTANTS.SEARCH;
-
+  LIST_ADD_FRIEND = COMETCHAT_CONSTANTS.LIST_ADD_FRIEND
   openAddFriendsView: boolean = false;
-
+  openListRequestFriends: boolean = false;
   constructor(private ref: ChangeDetectorRef,
               private userService: UserService,
               private localStorageService: LocalStorageService,
@@ -95,8 +97,8 @@ export class CometChatUserListComponent
   }
 
   ngOnInit() {
+    console.log("user list" + JSON.stringify(this.usersList))
     try {
-
       this.usersRequest = new CometChat.UsersRequestBuilder()
         .friendsOnly(this.friendsOnly)
         .setLimit(60)
@@ -127,6 +129,7 @@ export class CometChatUserListComponent
           },
         })
       );
+      
     } catch (error) {
       logger(error);
     }
@@ -158,18 +161,33 @@ export class CometChatUserListComponent
             this.toggleAddFriendsView();
             break;
           }
+          case enums.CLOSE_LIST_REQUEST_FRIENDS: {
+            this.toggleListAddFriendsView();
+            break;
+          }
           case enums.GROUP_CREATED: {
             this.toggleAddFriendsView();
            //s this.createGroupActionHandler(data);
             break;
           }
+
+          case enums.UPDATE_LIST_CONTACT: {
+            this.userUpdateWhenAddFriend(data.user)
+            //this.fetchNextContactList();
+            break;
+          }
+          case enums.UPDATE_DELETE_LIST_CONTACT: {
+            this.toggleListAddFriendsView();
+            break;
+          }
+
         }
       } catch (error) {
         logger(error);
       }
     }
+    
   
-
   /**
    * Search User Based on their Name
    * @param String searchKey
@@ -225,7 +243,7 @@ export class CometChatUserListComponent
   fetchNextContactList() {
     try {
       var uid = this.localStorageService.get("uid")
-      this.userService.getConversationByUserId(uid).subscribe(userList => {
+      this.userService.getConverByUserId(uid).subscribe(userList => {
 
         if (userList.length === 0 && this.userSearches === true) { 
           this.contactsNotFound = true;
@@ -239,27 +257,21 @@ export class CometChatUserListComponent
         logger("User list fetching failed with error:", error);
       })
 
-      // this.usersRequest.fetchNext().then(
-      //   (userList) => {
-      //     console.log("user List :" + userList[0].conversationId)
-    
-      //     if (userList.length === 0 && this.userSearches === true) { 
-      //       this.contactsNotFound = true;
-      //       this.decoratorMsg = COMETCHAT_CONSTANTS.NO_USERS_FOUND;
-      //     } else {
-      //       this.userSearches = false;
-      //       this.usersList = [...this.usersList, ...userList];
-      //       this.loader = false;
-      //     }
-      //   },
-      //   (error) => {
-      //     logger("User list fetching failed with error:", error);
-      //   }
-      // );
-
     } catch (error) {
       logger(error);
     }
+  }
+
+  userUpdateWhenAddFriend = (user) => {
+
+    var uid = this.localStorageService.get("uid")
+    this.userService.getConverByUserId(uid).subscribe(userList => {
+      this.usersList = []
+      this.usersList = [...this.usersList, ...userList];
+    },error => {
+      logger("User list fetching failed with error:", error);
+    })
+    this.toggleListAddFriendsView();
   }
 
   /**
@@ -323,6 +335,14 @@ export class CometChatUserListComponent
    toggleAddFriendsView() {
     try {
       this.openAddFriendsView = !this.openAddFriendsView;
+    } catch (error) {
+      logger(error);
+    }
+  }
+
+  toggleListAddFriendsView(){
+    try {
+      this.openListRequestFriends = !this.openListRequestFriends;
     } catch (error) {
       logger(error);
     }

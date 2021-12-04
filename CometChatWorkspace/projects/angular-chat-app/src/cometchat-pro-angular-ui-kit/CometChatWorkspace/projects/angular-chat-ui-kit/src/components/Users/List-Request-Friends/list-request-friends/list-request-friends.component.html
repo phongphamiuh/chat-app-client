@@ -1,0 +1,27 @@
+<div>
+    <cometchat-backdrop></cometchat-backdrop>
+    <!-- <p>test</p> -->
+    <div class="modalWrapperStyle">
+      <span class="modalCloseStyle" (click)="closeCreateGroupView()"></span>
+      <div class="title-list-add-friend">
+        <h3>{{LIST_ADD_FRIEND}}</h3>
+      </div>
+      <div class="modalBodyStyle">
+        <table class="modalTableStyle">
+          <!-- <caption class="tableCaptionStyle">
+            {{
+              LIST_ADD_FRIEND
+            }}
+          </caption> -->
+          <tbody class="tableBodyStyle">
+            <list-member-request-friends
+              *ngFor="let user of filteredList"
+              [user]="user"
+              (actionGenerated)="actionHandler($event)"
+            ></list-member-request-friends>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  

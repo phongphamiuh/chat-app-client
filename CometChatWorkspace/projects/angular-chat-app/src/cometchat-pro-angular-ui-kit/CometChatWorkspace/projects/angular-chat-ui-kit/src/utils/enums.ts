@@ -90,6 +90,7 @@ export const POLL_CREATED = "pollCreated";
 export const POLL_ANSWERED = "pollAnswered";
 
 export const CLOSE_CREATE_GROUP_VIEW = "closeCreateGroupView";
+export const CLOSE_LIST_REQUEST_FRIENDS = "closeListRequestFriends";
 export const GROUP_CREATED = "groupCreated";
 
 export const PUBLIC_GROUP = "public";
@@ -171,6 +172,7 @@ export const READ_AT = "readAt";
 export const STATUS = "status";
 export const GUID = "guid";
 export const UID = "uid";
+export const ID_USER = "id_user";
 
 export const DECREMENT = "decrement";
 export const SUCCESS = "success";
@@ -249,3 +251,10 @@ export const REPLY_PREVIEW = "replyPreview";
 
 export const BREAKPOINT_MIN_WIDTH = "320";
 export const BREAKPOINT_MAX_WIDTH = "767";
+
+export const DELETE_REQUEST_FRIEND = "deleteRequestFriend";
+export const Confirm_REQUEST_FRIEND = "confirmRequestFriend";
+
+export const UPDATE_LIST_CONTACT = "updateListContact";
+
+export const UPDATE_DELETE_LIST_CONTACT = "updateDeleteListContact";

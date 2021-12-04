@@ -161,6 +161,7 @@ export class CometChatCreateGroupComponent implements OnInit {
         .finally(() => {
           this.createBtnText = COMETCHAT_CONSTANTS.CREATE;
         });
+        
     } catch (error) {
       logger(error);
     }

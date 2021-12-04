@@ -1,15 +1,15 @@
-<div
+<!-- <div
   class="regularReaction"
   [ngClass]="{
     regularReactionSecondaryStyle:
-      messageDetails.sender.uid === loggedInUser.uid
+      messageDetails.id_send === loggedInUser.id_user
   }"
 >
   <div
     class="messageReactionStyle"
     *ngIf="
       messageReactions?.length > 0 &&
-      messageDetails.sender.uid === loggedInUser.uid
+      messageDetails.sender.id_send === loggedInUser.id_user
     "
   >
     <button class="emojiButtonStyle" (click)="sendReaction()">
@@ -43,4 +43,4 @@
       <img [src]="reactionIcon" class="regularReactionIcon" />
     </button>
   </div>
-</div>
+</div> -->

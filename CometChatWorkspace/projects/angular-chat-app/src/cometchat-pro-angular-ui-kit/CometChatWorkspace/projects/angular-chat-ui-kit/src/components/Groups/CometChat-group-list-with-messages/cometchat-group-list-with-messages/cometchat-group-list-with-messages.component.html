@@ -32,14 +32,14 @@
     *ngIf="threadMessageView || viewDetailScreen"
   >
     <!-- Message Thread Right side bar -->
-    <cometchat-message-thread
+    <!-- <cometchat-message-thread
       *ngIf="threadMessageView"
       [item]="threadMessageItem"
       [type]="threadMessageType"
       [parentMessage]="threadMessageParent"
       [loggedInUser]="loggedInUser"
       (actionGenerated)="actionHandler($event)"
-    ></cometchat-message-thread>
+    ></cometchat-message-thread> -->
 
     <!-- Detail sceen -->
     <cometchat-group-details

@@ -1,0 +1,21 @@
+<tr class="tableRowStyle">
+    <td class="tableColumnStyle">
+      <div class="avatarStyle">
+        <cometchat-avatar
+          [item]="user"
+          [userStatus]="user?.status"
+        ></cometchat-avatar>
+      </div>
+      <div class="nameStyle">{{ user?.name }}</div>
+    </td>
+    <td class="selectionColumnStyle">
+      <button (click)="confirmFriend()">Xác nhận</button>
+    </td>
+    <td class="selectionColumnStyle">
+      <!-- selectionBoxStyle -->
+      <button (click)="deleteFriend()">Từ chối</button>
+      <!-- <input class="" type="checkbox" (change)="handleCheck($event)" />
+      <label></label> -->
+    </td>
+  </tr>
+  

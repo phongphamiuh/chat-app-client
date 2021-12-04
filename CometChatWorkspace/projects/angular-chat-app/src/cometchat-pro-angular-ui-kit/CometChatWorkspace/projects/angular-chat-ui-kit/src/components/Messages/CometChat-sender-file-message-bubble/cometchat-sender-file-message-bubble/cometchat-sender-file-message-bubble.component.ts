@@ -28,8 +28,8 @@ export class CometChatSenderFileMessageBubbleComponent implements OnInit {
         this.messageDetails,
         enums.REACTIONS
       );
-      this.url = this.messageDetails.data.attachments[0].url;
-      this.name = this.messageDetails.data.attachments[0].name;
+      this.url = this.messageDetails.fileUrl;
+      this.name = this.messageDetails.message;
     } catch (error) {
       logger(error);
     }

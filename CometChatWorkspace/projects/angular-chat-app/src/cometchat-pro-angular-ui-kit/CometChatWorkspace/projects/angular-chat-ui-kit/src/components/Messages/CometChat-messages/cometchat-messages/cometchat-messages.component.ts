@@ -14,6 +14,7 @@ import { INCOMING_MESSAGE_SOUND } from "../../../../resources/audio/incomingMess
 import * as enums from "../../../../utils/enums";
 import { COMETCHAT_CONSTANTS } from "../../../../utils/messageConstants";
 import { logger } from "../../../../utils/common";
+import { Message, MessageService } from "../../Message-Service/message.service";
 @Component({
   selector: "cometchat-messages",
   templateUrl: "./cometchat-messages.component.html",
@@ -42,7 +43,7 @@ export class CometChatMessagesComponent implements OnInit, OnChanges {
   reactionName = COMETCHAT_CONSTANTS.HEART;
   messageToReact = null;
 
-  constructor() {}
+  constructor(private messageService: MessageService) {}
 
   ngOnChanges(change: SimpleChanges) {
     try {
@@ -408,12 +409,15 @@ export class CometChatMessagesComponent implements OnInit, OnChanges {
   deleteMessage = (message) => {
     try {
       const messageId = message.id;
-      CometChat.deleteMessage(messageId)
-        .then((deletedMessage) => {
-          this.removeMessages([deletedMessage]);
+      
+      const d = new Date();
+      let ms = Date.now();
+
+      this.messageService.deleteMessage(this.item.id_chatroom, message,ms, message.id_send).subscribe(deletedMessage => {
+        this.removeMessages([deletedMessage]);
 
           const messageList = [...this.messageList];
-          let messageKey = messageList.findIndex((m) => m.id === message.id);
+          let messageKey = messageList.findIndex((m) => m.sentAt === message.id);
 
           this.actionGenerated.emit({
             type: enums.THREAD_PARENT_MESSAGE_UPDATED,
@@ -427,10 +431,32 @@ export class CometChatMessagesComponent implements OnInit, OnChanges {
               payLoad: [deletedMessage],
             });
           }
-        })
-        .catch((error) => {
-          logger("Message delete failed with error:", error);
-        });
+      },error => {
+        
+      })
+      // CometChat.deleteMessage(messageId)
+      //   .then((deletedMessage) => {
+      //     this.removeMessages([deletedMessage]);
+
+      //     const messageList = [...this.messageList];
+      //     let messageKey = messageList.findIndex((m) => m.id === message.id);
+
+      //     this.actionGenerated.emit({
+      //       type: enums.THREAD_PARENT_MESSAGE_UPDATED,
+      //       updateType: enums.DELETE,
+      //       payLoad: [deletedMessage],
+      //     });
+
+      //     if (messageList.length - messageKey === 1 && !message.replyCount) {
+      //       this.actionGenerated.emit({
+      //         type: enums.MESSAGE_DELETE,
+      //         payLoad: [deletedMessage],
+      //       });
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     logger("Message delete failed with error:", error);
+      //   });
     } catch (error) {
       logger(error);
     }
@@ -488,14 +514,23 @@ export class CometChatMessagesComponent implements OnInit, OnChanges {
    */
   removeMessages = (messages) => {
     try {
+
+      
       const deletedMessage = messages[0];
       const messagelist = [...this.messageList];
-
+      console.log(JSON.stringify(this.messageList))
+      console.log('delete message = ' + JSON.stringify(deletedMessage))
       let messageKey = messagelist.findIndex(
-        (message) => message.id === deletedMessage.id
+        (message) => message.sentAt === deletedMessage.sentAt
       );
+
+      console.log('message Key'+JSON.stringify(messageKey))
+
       if (messageKey > -1) {
         let messageObj = { ...messagelist[messageKey] };
+
+        console.log('message object '+JSON.stringify(messageObj))
+
         let newMessageObj = Object.assign({}, messageObj, deletedMessage);
 
         messagelist.splice(messageKey, 1, newMessageObj);

@@ -6,7 +6,7 @@ import { CometChatConversationListWithMessagesComponent } from "./cometchat-conv
 import { CometChatConversationList } from "../CometChat-conversation-list/cometchat-conversation-list.module";
 import { CometChatMessages } from "../../Messages/CometChat-messages/cometchat-messages.module";
 import { CometChatUserDetails } from "../../Users/CometChat-user-details/cometchat-user-details.module";
-import { CometChatMessageThread } from "../../Messages/CometChat-message-thread/cometchat-message-thread.module";
+//import { CometChatMessageThread } from "../../Messages/CometChat-message-thread/cometchat-message-thread.module";
 import { CometChatImageViewer } from "../../Messages/CometChat-image-viewer/cometchat-image-viewer.module";
 import { CometChatGroupDetails } from "../../Groups/CometChat-group-details/cometchat-group-details.module";
 import { CometChatIncomingCall } from "../../Calls/CometChat-incoming-call/cometchat-incoming-call.module";
@@ -19,7 +19,7 @@ import { CometChatOutgoingCall } from "../../Calls/CometChat-outgoing-call/comet
     CometChatMessages,
     CometChatUserDetails,
     CometChatGroupDetails,
-    CometChatMessageThread,
+//    CometChatMessageThread,
     CometChatImageViewer,
     CometChatIncomingCall,
     CometChatOutgoingCall,

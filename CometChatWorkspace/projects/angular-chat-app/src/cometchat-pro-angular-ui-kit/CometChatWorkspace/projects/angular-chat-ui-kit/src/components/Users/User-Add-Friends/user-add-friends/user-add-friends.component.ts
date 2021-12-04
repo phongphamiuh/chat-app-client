@@ -178,17 +178,40 @@ export class UserAddFriendsComponent implements OnInit {
       //   .finally(() => {
       //     this.createBtnText = COMETCHAT_CONSTANTS.CREATE;
       //   });
-      
+
       var uid = this.localStorage.get("uid")
-      this.userService.addFriend(uid,this.name.trim()).subscribe(user => {
-          this.resetGroupData();
-          this.actionGenerated.emit({
-            type: enums.GROUP_CREATED,
-            payLoad: user,
-          });
+      this.userService.getUserByPhone(this.name.trim()).subscribe(user => {
+        if(user == null) this.error = "Bạn bè không tồn tại"
+        else{
+          this.userService.checkUserIsFriend(uid, user.id_user).subscribe(res => {
+            if(res != null) this.error = "Người dùng này đã là bạn bè "
+            else {
+              
+              this.userService.sendRequestAddFriend(uid,user.id_user).subscribe(res => {
+                this.resetGroupData();
+                this.actionGenerated.emit({
+                  type: enums.GROUP_CREATED,
+                  payLoad: user,
+                });
+              })
+
+            }
+          })
+        }
       },error => {
-        this.error = "Bạn bè không tồn tại"
+        console.log(error)
       })
+
+      // var uid = this.localStorage.get("uid")
+      // this.userService.addFriend(uid,this.name.trim()).subscribe(user => {
+      //     this.resetGroupData();
+      //     this.actionGenerated.emit({
+      //       type: enums.GROUP_CREATED,
+      //       payLoad: user,
+      //     });
+      // },error => {
+      //   this.error = "Bạn bè không tồn tại"
+      // })
     } catch (error) {
       logger(error);
     }

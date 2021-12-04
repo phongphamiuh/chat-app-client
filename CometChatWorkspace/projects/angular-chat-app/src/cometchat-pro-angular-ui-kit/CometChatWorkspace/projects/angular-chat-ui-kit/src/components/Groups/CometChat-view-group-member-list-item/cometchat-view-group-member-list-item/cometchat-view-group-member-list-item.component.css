@@ -49,14 +49,25 @@
 }
 
 .actionColumnStyle {
-  width: 70px;
-  padding: 8px;
+  width: 150px;
+  padding: 4px;
 }
 
 .actionColumnStyle img {
   width: 20px;
   height: 20px;
   cursor: pointer;
+}
+
+.actionColumnStyle button {
+  cursor: pointer;
+  padding: 7px 17px;
+  background-color: red;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 10px;
+  outline: 0;
+  border: 0;
 }
 
 .scopeWrapperStyle {

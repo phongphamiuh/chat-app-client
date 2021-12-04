@@ -124,130 +124,129 @@ export class CometChatUIComponent implements OnInit {
    * Handles all the actions propagated from the child component
    */
   actionHandler(action = null, item = null, count = null) {
-    // try {
-    //   let message = action.payLoad;
-    //   console.log("message start : " + message[0])
-    //   let data = action.payLoad;
+    try {
+      let message = action.payLoad;
+      let data = action.payLoad;
       
-    //   console.log('item : ' + item)
-    //   switch (action.type) {
-    //     case enums.BLOCK_USER:
-    //       this.blockUser();
-    //       break;
-    //     case enums.UNBLOCK_USER:
-    //       this.unblockUser();
-    //       break;
-    //     case enums.VIEW_DETAIL:
-    //     case enums.CLOSE_DETAIL_CLICKED:
-    //       this.toggleDetailView();
-    //       break;
-    //     case enums.VIEW_MESSAGE_THREAD:
-    //       this.viewMessageThread(message);
-    //       break;
-    //     case enums.THREAD_PARENT_MESSAGE_UPDATED: {
-    //       this.updateThreadMessage(action.payLoad[0], action.updateType);
-    //       break;
-    //     }
+      console.log('type  : ' + action.type)
+      switch (action.type) {
+        case enums.BLOCK_USER:
+          this.blockUser();
+          break;
+        case enums.UNBLOCK_USER:
+          this.unblockUser();
+          break;
+        case enums.VIEW_DETAIL:
+        case enums.CLOSE_DETAIL_CLICKED:
+          this.toggleDetailView();
+          break;
+        case enums.VIEW_MESSAGE_THREAD:
+          this.viewMessageThread(message);
+          break;
+        case enums.THREAD_PARENT_MESSAGE_UPDATED: {
+          this.updateThreadMessage(action.payLoad[0], action.updateType);
+          break;
+        }
 
-    //     case enums.CLOSE_THREAD_CLICKED:
-    //       this.closeThreadMessages();
-    //       break;
-    //     case enums.VIEW_ACTUAL_IMAGE:
-    //       this.toggleImageView(message);
-    //       break;
-    //     case enums.CLOSE_FULL_SCREEN_IMAGE: {
-    //       this.toggleImageView(null);
-    //     }
-    //     case enums.MESSAGE_COMPOSED:
-    //     case enums.MESSAGE_EDIT:
-    //     case enums.MESSAGE_DELETE:
-    //       this.updateLastMessage(message);
-    //       break;
-    //     case enums.CHANGE_THREAD_PARENT_MESSAGE_REPLY_COUNT: {
-    //       this.composedThreadMessage = {
-    //         ...this.threadMessageParent,
-    //         replyCount: action.payLoad,
-    //       };
-    //       break;
-    //     }
+        case enums.CLOSE_THREAD_CLICKED:
+          this.closeThreadMessages();
+          break;
+        case enums.VIEW_ACTUAL_IMAGE:
+          this.toggleImageView(message);
+          break;
+        case enums.CLOSE_FULL_SCREEN_IMAGE: {
+          this.toggleImageView(null);
+        }
+        case enums.MESSAGE_COMPOSED:
+        case enums.MESSAGE_EDIT:
+        case enums.MESSAGE_DELETE:
+          this.updateLastMessage(message);
+          break;
+        case enums.CHANGE_THREAD_PARENT_MESSAGE_REPLY_COUNT: {
+          this.composedThreadMessage = {
+            ...this.threadMessageParent,
+            replyCount: action.payLoad,
+          };
+          break;
+        }
 
-    //     case enums.MEMBER_SCOPE_CHANGED: {
-    //       this.memberScopeChanged(action.payLoad);
-    //       break;
-    //     }
-    //     case enums.MEMBERS_ADDED: {
-    //       this.membersAdded(data);
-    //       break;
-    //     }
-    //     case enums.MEMBERS_UPDATED: {
-    //       this.updateMembersCount(data.item, data.count);
-    //       break;
-    //     }
-    //     case enums.GROUP_UPDATED:
-    //       this.groupUpdated(data.message, data.key, data.group, data.options);
-    //       break;
-    //     case enums.MEMBER_UNBANNED:
-    //       this.memberUnbanned(data);
-    //       break;
-    //     case enums.LEFT_GROUP: {
-    //       this.leaveGroup(data);
-    //       break;
-    //     }
-    //     case enums.DELETE_GROUP: {
-    //       this.deleteGroup(data);
-    //       break;
-    //     }
-    //     case enums.AUDIO_CALL: {
-    //       this.audioCall();
-    //       break;
-    //     }
-    //     case enums.VIDEO_CALL:
-    //       this.videoCall();
-    //       break;
-    //     case enums.OUT_GOING_CALL_REJECTED:
-    //     case enums.OUTGOING_CALL_REJECTED:
-    //     case enums.OUTGOING_CALL_CANCELLED:
-    //     case enums.CALL_ENDED_BY_USER:
-    //     case enums.CALL_ENDED: {
-    //       this.outgoingCallEnded(message);
-    //       break;
-    //     }
-    //     case enums.USER_JOINED_CALL:
-    //     case enums.USER_LEFT_CALL: {
-    //       break;
-    //     }
-    //     case enums.ACCEPT_INCOMING_CALL: {
-    //       this.acceptIncomingCall(message);
-    //       break;
-    //     }
-    //     case enums.ACCEPTED_INCOMING_CALL: {
-    //       this.callInitiated(message);
-    //       break;
-    //     }
-    //     case enums.REJECTED_INCOMING_CALL: {
-    //       this.rejectedIncomingCall(message);
-    //       break;
-    //     }
-    //     case enums.CALL_ERROR: {
-    //       logger(
-    //         "User List screen --> call couldn't complete due to error",
-    //         action.payLoad
-    //       );
-    //     }
-    //     case enums.MENU_CLICKED: {
-    //       this.checkAnimatedState = "normal";
-    //       this.item = null;
-    //       break;
-    //     }
-    //     case enums.TAB_CHANGED: {
-    //       this.viewDetailScreen = false;
-    //     }
-    //     default:
-    //       break;
-    //   }
-    // } catch (error) {
-    //   logger(error);
-    // }
+        case enums.MEMBER_SCOPE_CHANGED: {
+          this.memberScopeChanged(action.payLoad);
+          break;
+        }
+        case enums.MEMBERS_ADDED: {
+          this.membersAdded(data);
+          break;
+        }
+        case enums.MEMBERS_UPDATED: {
+          this.updateMembersCount(data.item, data.count);
+          break;
+        }
+        case enums.GROUP_UPDATED:
+          this.groupUpdated(data.message, data.key, data.group, data.options);
+          break;
+        case enums.MEMBER_UNBANNED:
+          this.memberUnbanned(data);
+          break;
+        case enums.LEFT_GROUP: {
+          this.leaveGroup(data);
+          break;
+        }
+        case enums.DELETE_GROUP: {
+          this.deleteGroup(data);
+          break;
+        }
+        case enums.AUDIO_CALL: {
+          this.audioCall();
+          break;
+        }
+        case enums.VIDEO_CALL:
+          this.videoCall();
+          break;
+        case enums.OUT_GOING_CALL_REJECTED:
+        case enums.OUTGOING_CALL_REJECTED:
+        case enums.OUTGOING_CALL_CANCELLED:
+        case enums.CALL_ENDED_BY_USER:
+        case enums.CALL_ENDED: {
+          this.outgoingCallEnded(message);
+          break;
+        }
+        case enums.USER_JOINED_CALL:
+        case enums.USER_LEFT_CALL: {
+          break;
+        }
+        case enums.ACCEPT_INCOMING_CALL: {
+          this.acceptIncomingCall(message);
+          break;
+        }
+        case enums.ACCEPTED_INCOMING_CALL: {
+          this.callInitiated(message);
+          break;
+        }
+        case enums.REJECTED_INCOMING_CALL: {
+          this.rejectedIncomingCall(message);
+          break;
+        }
+        case enums.CALL_ERROR: {
+          logger(
+            "User List screen --> call couldn't complete due to error",
+            action.payLoad
+          );
+        }
+        case enums.MENU_CLICKED: {
+          this.checkAnimatedState = "normal";
+          this.item = null;
+          break;
+        }
+        case enums.TAB_CHANGED: {
+          this.viewDetailScreen = false;
+        }
+        default:
+          break;
+      }
+    } catch (error) {
+      logger(error);
+    }
   }
 
   /**
@@ -384,7 +383,6 @@ export class CometChatUIComponent implements OnInit {
    * Sets the item information with the item that was clicked from userList , conversationList or groupList
    */
   userClicked(user) {
-    console.log('conversation is : ' + user)
     try {
       if (this.checkAnimatedState !== null) {
         this.checkAnimatedState == "normal"
@@ -392,7 +390,15 @@ export class CometChatUIComponent implements OnInit {
           : (this.checkAnimatedState = "normal");
       }
       this.item = user;
-      if (this.item.hasOwnProperty(enums.UID)) {
+      //if(this.item.hasOwnProperty)
+      console.log(JSON.stringify(this.item))
+
+      // if(this.item.is_group_chat == 0){
+      //   this.type = CometChat.RECEIVER_TYPE.USER;
+      // }else{
+      //   this.type = CometChat.RECEIVER_TYPE.GROUP;
+      // }
+      if (this.item.hasOwnProperty(enums.ID_USER)) {
         this.type = CometChat.RECEIVER_TYPE.USER;
       } else {
         this.type = CometChat.RECEIVER_TYPE.GROUP;

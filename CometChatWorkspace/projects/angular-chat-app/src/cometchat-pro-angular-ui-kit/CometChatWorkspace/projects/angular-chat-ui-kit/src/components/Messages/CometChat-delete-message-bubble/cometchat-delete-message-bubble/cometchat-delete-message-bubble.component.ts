@@ -26,7 +26,7 @@ export class CometChatDeleteMessageBubbleComponent implements OnInit {
 
   ngOnInit() {
     try {
-      if (this.messageDetails.deletedBy === this.loggedInUser.uid) {
+      if (this.messageDetails.deletedBy === this.loggedInUser.id_user) {
         this.loggedInUserDeletedThisMessage = true;
       }
       this.time = getSentAtTime(this.messageDetails);

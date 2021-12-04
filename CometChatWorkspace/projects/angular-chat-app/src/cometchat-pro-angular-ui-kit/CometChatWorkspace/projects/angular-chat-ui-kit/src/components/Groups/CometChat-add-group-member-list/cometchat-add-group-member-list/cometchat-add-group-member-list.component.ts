@@ -10,6 +10,9 @@ import { CometChat } from "@cometchat-pro/chat";
 import * as enums from "../../../../utils/enums";
 import { COMETCHAT_CONSTANTS } from "../../../../utils/messageConstants";
 import { logger } from "../../../../utils/common";
+import { UserService } from "../../../Users/User-Service/user.service";
+import { LocalStorageService } from "../../../Out-Service/local-storage.service";
+import { GroupService } from "../../Group-Service/group.service";
 
 @Component({
   selector: "cometchat-add-group-member-list",
@@ -39,11 +42,14 @@ export class CometChatAddGroupMemberListComponent implements OnInit, OnDestroy {
   USERS: String = COMETCHAT_CONSTANTS.USERS;
   SEARCH: String = COMETCHAT_CONSTANTS.SEARCH;
 
-  constructor() {}
+  constructor(private userService: UserService,
+              private localStorageService: LocalStorageService,
+              private groupService: GroupService) {}
 
   ngOnInit() {
     try {
       this.membersRequest = this.createMemberRequest();
+
       this.getUsers();
       this.attachListeners(this.userUpdated);
     } catch (error) {
@@ -156,6 +162,8 @@ export class CometChatAddGroupMemberListComponent implements OnInit, OnDestroy {
       }
 
       let val = e.target.value;
+
+      console.log("search key :" + val)
       this.timeout = setTimeout(() => {
         this.decoratorMessage = COMETCHAT_CONSTANTS.LOADING_MESSSAGE;
 
@@ -178,42 +186,53 @@ export class CometChatAddGroupMemberListComponent implements OnInit, OnDestroy {
    */
   getUsers = () => {
     try {
-      CometChat.getLoggedinUser()
-        .then((user) => {
-          this.fetchNextUsers()
-            .then((userList) => {
-              const filteredUserList = userList.filter((user) => {
-                const found = this.memberList.find(
-                  (member) => user.uid === member.uid
-                );
-                const foundBanned = this.bannedMemberList.find(
-                  (member) => user.uid === member.uid
-                );
-                if (found || foundBanned) {
-                  return false;
-                }
-                return true;
-              });
+      var uid = this.localStorageService.get('uid')
+      this.userService.getAllFriendsByUserId(uid).subscribe(userList => {
+        this.filteredList = [...this.userlist, ...userList];
 
-              this.userlist = [...this.userlist, ...userList];
+        //this.filteredList = [...this.userlist];
+      },error => {
+        this.decoratorMessage = COMETCHAT_CONSTANTS.ERROR;
+        logger("[CometChatAddMembers] getUsers fetchNext error", error);
+      })
+      
+      // CometChat.getLoggedinUser()
+      //   .then((user) => {
+      //     this.fetchNextUsers()
+      //       .then((userList) => {
+      //         const filteredUserList = userList.filter((user) => {
+      //           const found = this.memberList.find(
+      //             (member) => user.uid === member.uid
+      //           );
+      //           const foundBanned = this.bannedMemberList.find(
+      //             (member) => user.uid === member.uid
+      //           );
+      //           if (found || foundBanned) {
+      //             return false;
+      //           }
+      //           return true;
+      //         });
 
-              this.filteredList = [...this.filteredList, ...filteredUserList];
+      //         this.userlist = [...this.userlist, ...userList];
 
-              if (this.filteredList.length === 0) {
-                this.decoratorMessage = COMETCHAT_CONSTANTS.NO_USERS_FOUND;
-              } else {
-                this.decoratorMessage = "";
-              }
-            })
-            .catch((error) => {
-              this.decoratorMessage = COMETCHAT_CONSTANTS.ERROR;
-              logger("[CometChatAddMembers] getUsers fetchNext error", error);
-            });
-        })
-        .catch((error) => {
-          this.decoratorMessage = COMETCHAT_CONSTANTS.ERROR;
-          logger("[CometChatAddMembers] getUsers getLoggedInUser error", error);
-        });
+      //         this.filteredList = [...this.filteredList, ...filteredUserList];
+
+      //         if (this.filteredList.length === 0) {
+      //           this.decoratorMessage = COMETCHAT_CONSTANTS.NO_USERS_FOUND;
+      //         } else {
+      //           this.decoratorMessage = "";
+      //         }
+      //       })
+      //       .catch((error) => {
+      //         this.decoratorMessage = COMETCHAT_CONSTANTS.ERROR;
+      //         logger("[CometChatAddMembers] getUsers fetchNext error", error);
+      //       });
+      //   })
+      //   .catch((error) => {
+      //     this.decoratorMessage = COMETCHAT_CONSTANTS.ERROR;
+      //     logger("[CometChatAddMembers] getUsers getLoggedInUser error", error);
+      //   });
+
     } catch (error) {
       logger(error);
     }
@@ -226,7 +245,7 @@ export class CometChatAddGroupMemberListComponent implements OnInit, OnDestroy {
   actionHandler(action) {
     try {
       let data = action.payLoad;
-
+      console.log('data user ...............' + JSON.stringify(data.user))
       switch (action.type) {
         case enums.MEMBER_UPDATED: {
           this.membersUpdated(data.user, data.userState);
@@ -243,25 +262,33 @@ export class CometChatAddGroupMemberListComponent implements OnInit, OnDestroy {
    * @param Any user
    */
   membersUpdated = (user, userState) => {
-    try {
-      if (userState) {
-        const members = [...this.membersToAdd];
-        members.push(user);
-        this.membersToAdd = [...members];
-      } else {
-        const membersToAdd = [...this.membersToAdd];
-        const IndexFound = membersToAdd.findIndex(
-          (member) => member.uid === user.uid
-        );
-        if (IndexFound > -1) {
-          membersToAdd.splice(IndexFound, 1);
-          this.membersToAdd = [...membersToAdd];
-        }
-      }
-    } catch (error) {
-      logger(error);
-    }
+    // my code
+    const members = [...this.membersToAdd];
+    members.push(user);
+    this.membersToAdd = [...members];
+
+    // try {
+    //   if (userState) {
+    //     const members = [...this.membersToAdd];
+    //     members.push(user);
+    //     this.membersToAdd = [...members];
+    //   } else {
+    //     const membersToAdd = [...this.membersToAdd];
+    //     const IndexFound = membersToAdd.findIndex(
+    //       (member) => member.uid === user.uid
+    //     );
+    //     if (IndexFound > -1) {
+    //       membersToAdd.splice(IndexFound, 1);
+    //       this.membersToAdd = [...membersToAdd];
+    //     }
+    //   }
+    // } catch (error) {
+    //   logger(error);
+    // }
+
+
   };
+
 
   /**
    * adds all the members of the memberToAdd list to the group
@@ -279,6 +306,8 @@ export class CometChatAddGroupMemberListComponent implements OnInit, OnDestroy {
       const membersList = [];
 
       this.membersToAdd.forEach((newmember) => {
+
+        console.log("members to add : " + JSON.stringify(newmember))
         //if a selected member is already part of the member list, don't add
         const IndexFound = this.memberList.findIndex(
           (member) => member.uid === newmember.uid
@@ -322,11 +351,41 @@ export class CometChatAddGroupMemberListComponent implements OnInit, OnDestroy {
             this.addBtnText = COMETCHAT_CONSTANTS.ADD;
           });
       }
+
     } catch (error) {
       logger(error);
     }
   };
 
+  customUpdateMember = () => {
+    var uid = this.localStorageService.get('uid')
+
+    // this.membersToAdd.forEach(newMember => {
+    //   this.groupService.addMemberToGroup1(this.item.id_chatroom, newMember.id_user,"default",uid).subscribe(res => {
+    //     this.closeAddMembersView();
+    //   })
+    // },error => {
+    //   logger("addMembersToGroup failed with exception:", error);
+    // })
+
+  console.log("member to add  " + JSON.stringify(this.membersToAdd))
+
+    this.membersToAdd.forEach(newMember => {
+      this.groupService.addMemberToGroup(this.item.id_chatroom, newMember.id_user,"default",uid).subscribe(res => {
+        this.closeAddMembersView();
+
+        this.actionGenerated.emit({
+          type: enums.ADD_GROUP_PARTICIPANTS,
+          payLoad: this.membersToAdd,
+        });
+
+        //window.location.reload()
+      })
+    },error => {
+      logger("addMembersToGroup failed with exception:", error);
+    })
+  }
+ 
   /**
    * fetches a nexts set of list  of users based on the member request config
    * @param

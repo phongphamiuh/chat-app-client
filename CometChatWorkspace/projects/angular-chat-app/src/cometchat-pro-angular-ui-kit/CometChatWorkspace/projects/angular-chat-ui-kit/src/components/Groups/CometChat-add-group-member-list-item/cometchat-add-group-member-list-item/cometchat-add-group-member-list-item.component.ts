@@ -20,6 +20,7 @@ export class CometChatAddGroupMemberListItemComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
+
     try {
       this.checked = this.members.find(
         (member) => member.uid === this.user.uid

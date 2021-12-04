@@ -4,6 +4,12 @@
     <div class="friendsAddStyle" (click)="toggleAddFriendsView()"></div>
     <div></div>
   </div>
+
+  <div class="contactHeaderStyle1">
+    <h4 class="contactHeaderTitleStyle1">{{ LIST_ADD_FRIEND }}</h4>
+    <div class="friendsAddStyle" (click)="toggleListAddFriendsView()"></div>
+    <div></div>
+  </div>
   <div class="contactSearchStyle">
     <input
       class="contactSearchInputStyle"
@@ -62,10 +68,17 @@
     </div>
   </div>
 
-  <!-- create group component -->
+  <!-- add friends component -->
     <user-add-friends
     *ngIf="openAddFriendsView"
     (actionGenerated)="actionHandler($event)"
   ></user-add-friends>
-  <!-- create group component -->
+  <!-- add friends component -->
+
+    <!-- list request friends component -->
+    <list-request-friends
+    *ngIf="openListRequestFriends"
+    (actionGenerated)="actionHandler($event)"
+  ></list-request-friends>
+  <!-- list request friends component -->
 </div>

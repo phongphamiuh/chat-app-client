@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from "@angular/core";
 import { logger } from "../../../../utils/common";
+import { GroupService } from "../../Group-Service/group.service";
 
 @Component({
   selector: "cometchat-group-list-item",
@@ -12,9 +13,15 @@ export class CometChatGroupListItemComponent implements OnInit {
 
   @Output() onGroupClick: EventEmitter<any> = new EventEmitter();
 
-  constructor() {}
+  countMember = 0
 
-  ngOnInit() {}
+  constructor(private groupService: GroupService) {}
+
+  ngOnInit() {
+    this.groupService.getAllMemberByGroupId(this.group.id_chatroom).subscribe(g => {
+      this.countMember = g.length
+    })
+  }
 
   /**
    * Emitting the Group clicked so that it can be used in the parent component

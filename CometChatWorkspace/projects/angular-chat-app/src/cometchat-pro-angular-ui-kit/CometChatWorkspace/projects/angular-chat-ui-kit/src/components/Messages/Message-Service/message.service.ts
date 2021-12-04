@@ -29,8 +29,8 @@ export class MessageService {
     return this.httpClient.get<Message[]>(apiUrl + `/${uid}/${friendId}`).pipe()
   }
 
-  getAllMessageByIdChatRoom(idChatRoom: string): Observable<Messages[]>{
-    return this.httpClient.get<Messages[]>(apiUrlNode + `?id_chatroom=${idChatRoom}`).pipe()
+  getAllMessageByIdChatRoom(idChatRoom: string): Observable<RootObject>{
+    return this.httpClient.get<RootObject>(apiUrlNode + `?id_chatroom=${idChatRoom}`).pipe()
   }
 
   getAllMessageByIdChatRoom1(idChatRoom: string): Observable<Messages[]>{
@@ -66,6 +66,30 @@ export class MessageService {
     }
     const body=JSON.stringify(message);
     return this.httpClient.post<Messages>(apiUrlMessageData + `/${chatroomId}`,body, httpOptions).pipe()
+  } 
+
+  sendMessageFile(chatroomId: string,message: MessagesFile): Observable<MessagesFile> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'})
+    }
+    const body=JSON.stringify(message);
+    return this.httpClient.post<MessagesFile>(apiUrlMessageData + `/${chatroomId}`,body, httpOptions).pipe()
+  } 
+
+  sendMessage1(chatroomId: string,message: Messages): Observable<Messages> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'})
+    }
+    const body=JSON.stringify(message);
+    return this.httpClient.post<Messages>(apiUrlMessageData + `/${chatroomId}`,body, httpOptions).pipe()
+  } 
+
+  deleteMessage(chatroomId: string,message: MessagesDelete, deleteAt: number, deletedBy: string): Observable<MessagesDelete> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'})
+    }
+    const body=JSON.stringify(message);
+    return this.httpClient.put<MessagesDelete>(apiUrlMessageData + `/${chatroomId}/${deleteAt}/${deletedBy}`,body, httpOptions).pipe()
   } 
 
     sendMessagess(message: any) {
@@ -144,6 +168,53 @@ export class MessageService {
   sendMessageSocket(message){
     this.stompClient.send("/app/send/message" , {}, message);
   }
+
+  updateFile(file: File): Observable<any> {
+    const url = 'http://localhost:8080/storage/uploadFile'
+    let formData : FormData = new FormData();
+    formData.append('file',file)
+    return this.httpClient.post<any>(url,formData,{reportProgress: true,responseType: 'text' as 'json'}).pipe()
+    //formData.append(file)
+  }
+
+  /// group
+
+  createGroup(){
+    
+  }
+}
+
+export interface ResponseMessage{
+  message: string
+}
+
+export interface Content {
+  id_chatroom: string;
+  type: string;
+  id_send: string;
+  message: String;
+  sentAt: number;
+}
+
+export interface Datum {
+  content: Content[];
+}
+
+export interface RootObject {
+  Data: Datum[];
+}
+
+
+export interface MessageResponse{
+  data : Data[]
+}
+
+export interface Data{
+  content: Content;
+}
+
+export interface Content {
+  messages:Messages[]
 }
 
 export interface Messages {
@@ -152,6 +223,25 @@ export interface Messages {
   id_send: string;
   message: String;
   sentAt: number;
+}
+
+export interface MessagesFile {
+  id_chatroom: string;
+  type: string;
+  id_send: string;
+  message: String;
+  sentAt: number;
+  fileUrl: string
+}
+
+
+export interface MessagesDelete {
+  type: string;
+  id_send: string;
+  message: String;
+  sentAt: number;
+  deletedAt: number;
+  deletedBy: number;
 }
 
 // export interface Messages {
