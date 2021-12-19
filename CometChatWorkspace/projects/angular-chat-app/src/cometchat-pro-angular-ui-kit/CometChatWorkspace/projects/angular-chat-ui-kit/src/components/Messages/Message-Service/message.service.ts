@@ -9,7 +9,7 @@ import { connect, io, Socket } from 'socket.io-client';
 import { ThrowStmt } from '@angular/compiler';
 const apiUrl = 'http://localhost:8080/messages';
 const apiUrlLtn = 'http://localhost:8080/messagesltn';
-const apiUrlNode = 'http://ec2-52-221-232-82.ap-southeast-1.compute.amazonaws.com:3000/MessageStored';
+const apiUrlNode = 'http://ec2-13-213-52-25.ap-southeast-1.compute.amazonaws.com:3000/MessageStored';
 const apiUrlMessageData = 'http://localhost:8080/messagesdata';
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ const apiUrlMessageData = 'http://localhost:8080/messagesdata';
 export class MessageService {
 
   private serverUrl = 'http://localhost:8080/socket'
-  private serverUrl1 = 'http://ec2-52-221-232-82.ap-southeast-1.compute.amazonaws.com:3001'
+  private serverUrl1 = 'http://ec2-13-213-52-25.ap-southeast-1.compute.amazonaws.com:3001'
   private title = 'WebSockets chat';
   private stompClient;
 

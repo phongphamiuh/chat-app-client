@@ -8,7 +8,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HomePageComponent } from "./App-Components/home-page/home-page.component";
 import { CometChatUnifiedPageComponent } from "./App-Components/Pages/comet-chat-unified-page/comet-chat-unified-page.component";
 
-import { CometChatConversationList } from "../cometchat-pro-angular-ui-kit/CometChatWorkspace/projects/angular-chat-ui-kit/src/components/Chats/CometChat-conversation-list/cometchat-conversation-list.module";
+//import { CometChatConversationList } from "../cometchat-pro-angular-ui-kit/CometChatWorkspace/projects/angular-chat-ui-kit/src/components/Chats/CometChat-conversation-list/cometchat-conversation-list.module";
 //import { CometChatConversationListWithMessages } from "../cometchat-pro-angular-ui-kit/CometChatWorkspace/projects/angular-chat-ui-kit/src/components/Chats/CometChat-conversation-list-with-messages/cometchat-conversation-list-with-messages.module";
 import { CometChatGroupList } from "../cometchat-pro-angular-ui-kit/CometChatWorkspace/projects/angular-chat-ui-kit/src/components/Groups/CometChat-group-list/cometchat-group-list.module";
 //import { CometChatGroupListWithMessages } from "../cometchat-pro-angular-ui-kit/CometChatWorkspace/projects/angular-chat-ui-kit/src/components/Groups/CometChat-group-list-with-messages/cometchat-group-list-with-messages.module";

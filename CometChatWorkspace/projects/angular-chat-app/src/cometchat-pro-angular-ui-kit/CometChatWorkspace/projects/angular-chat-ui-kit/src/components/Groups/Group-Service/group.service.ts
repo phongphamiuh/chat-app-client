@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-const publicApi = "http://ec2-52-221-232-82.ap-southeast-1.compute.amazonaws.com:3000/Chatroom"
-const publicApiGroupMember = "http://ec2-52-221-232-82.ap-southeast-1.compute.amazonaws.com:3000/Chatroom/group/member"
+const publicApi = "http://ec2-13-213-52-25.ap-southeast-1.compute.amazonaws.com:3000/Chatroom"
+const publicApiGroupMember = "http://ec2-13-213-52-25.ap-southeast-1.compute.amazonaws.com:3000/Chatroom/group/member"
 @Injectable({
   providedIn: 'root'
 })

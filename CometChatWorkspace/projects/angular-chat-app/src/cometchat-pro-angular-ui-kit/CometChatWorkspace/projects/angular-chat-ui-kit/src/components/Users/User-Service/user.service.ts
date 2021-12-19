@@ -4,13 +4,13 @@ import { Observable } from 'rxjs';
 import { MessageResponse } from '../../Messages/Message-Service/message.service';
 
 const apiUrl = 'http://localhost:8080/users';
-const apiUrlVari = 'http://ec2-52-221-232-82.ap-southeast-1.compute.amazonaws.com:3000/Users';
-const apiUrlConversation = 'http://ec2-52-221-232-82.ap-southeast-1.compute.amazonaws.com:3000/Chatroom'
-const apiUrlFriends = 'http://ec2-52-221-232-82.ap-southeast-1.compute.amazonaws.com:3000/Friend'
+const apiUrlVari = 'http://ec2-13-213-52-25.ap-southeast-1.compute.amazonaws.com:3000/Users';
+const apiUrlConversation = 'http://ec2-13-213-52-25.ap-southeast-1.compute.amazonaws.com:3000/Chatroom'
+const apiUrlFriends = 'http://ec2-13-213-52-25.ap-southeast-1.compute.amazonaws.com:3000/Friend'
 
-const apiUrlFriendRequest = 'http://ec2-52-221-232-82.ap-southeast-1.compute.amazonaws.com:3000/Friendrequest'
+const apiUrlFriendRequest = 'http://ec2-13-213-52-25.ap-southeast-1.compute.amazonaws.com:3000/Friendrequest'
 
-const apiss = 'http://ec2-52-221-232-82.ap-southeast-1.compute.amazonaws.com:3000/Conversations'
+const apiss = 'http://ec2-13-213-52-25.ap-southeast-1.compute.amazonaws.com:3000/Conversations'
 @Injectable({
   providedIn: 'root'
 })
