@@ -281,7 +281,7 @@ export class MessageService {
 
   updateFile(file: File): Observable<ResponseMessage1> {
     // const url = 'http://localhost:8080/storage/uploadFile'
-    const url1 = 'http://ec2-52-221-232-82.ap-southeast-1.compute.amazonaws.com:3000/Image'
+    const url1 = 'http://ec2-13-213-52-25.ap-southeast-1.compute.amazonaws.com:3000/Image'
      let formData: FormData = new FormData();
      formData.append('file', file)
      return this.httpClient.post<ResponseMessage1>(url1, formData).pipe()
