@@ -10,7 +10,7 @@ import { COMETCHAT_CONSTANTS } from "../../../../utils/messageConstants";
 })
 export class CometChatDeleteMessageBubbleComponent implements OnInit {
   @Input() messageDetails = null;
-
+  @Input() type: String = "";
   @Input() loggedInUser = null;
 
   loggedInUserDeletedThisMessage: boolean = false;
@@ -26,6 +26,9 @@ export class CometChatDeleteMessageBubbleComponent implements OnInit {
 
   ngOnInit() {
     try {
+      console.log("kajsd is user ...................." + JSON.stringify(this.messageDetails))
+      //this.loggedInUserDeletedThisMessage = true;
+      
       if (this.messageDetails.deletedBy === this.loggedInUser.id_user) {
         this.loggedInUserDeletedThisMessage = true;
       }

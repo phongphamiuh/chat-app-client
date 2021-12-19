@@ -13,6 +13,8 @@ import { logger } from "../../../../utils/common";
 import { LocalStorageService } from "../../../Out-Service/local-storage.service";
 import { GroupService } from "../../Group-Service/group.service";
 import { UserService } from "../../../Users/User-Service/user.service";
+import { Messages, MessageService, MessagesV } from "../../../Messages/Message-Service/message.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "cometchat-group-details",
@@ -57,10 +59,13 @@ export class CometChatGroupDetailsComponent implements OnInit, OnDestroy {
 
   constructor(private localStorageService: LocalStorageService,
     private groupService: GroupService,
-    private userService: UserService) {}
+    private userService: UserService,
+    private messageService: MessageService,
+    private router: Router
+    ) {}
 
   ngOnInit() {
-
+    
     var uid = this.localStorageService.get("uid")
     this.userService.getUserById1(uid).subscribe(user => {
       this.loggedInUser = user
@@ -537,6 +542,10 @@ export class CometChatGroupDetailsComponent implements OnInit, OnDestroy {
           type: enums.MEMBERS_ADDED,
           payLoad: members,
         });
+
+
+        console.log('item ................' + JSON.stringify(this.item))
+        
         if (triggerUpdate) {
           this.actionGenerated.emit({
             type: enums.MEMBERS_UPDATED,
@@ -646,23 +655,87 @@ export class CometChatGroupDetailsComponent implements OnInit, OnDestroy {
       logger(error);
     }
   }
+
+  reloadComponent() {
+    let currentUrl = this.router.url;
+        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+        this.router.onSameUrlNavigation = 'reload';
+        this.router.navigate([currentUrl]);
+    }
   /* helps the user to leave the group
    * @param
    */
   leaveGroup = () => {
     try {
       const guid = this.item.guid;
-      CometChat.leaveGroup(guid)
-        .then((hasLeft) => {
-          logger("Group left successfully:", hasLeft);
-          this.actionGenerated.emit({
-            type: enums.LEFT_GROUP,
-            payLoad: this.item,
-          });
+      var uid = this.localStorageService.get('uid')
+      var name = this.localStorageService.get('name')
+
+      if(confirm("Bạn có chắc chắn muốn xóa không")) {
+        this.groupService.kickMember(this.item.id_chatroom, uid).subscribe(res => {
+
+          let ms = Date.now();
+  
+  
+         // console.log("member to kick" + JSON.stringify(memberToKick))
+  
+          var messages: Messages = {
+            id_chatroom: this.item.id_chatroom,
+            id_send: 'system',
+            message: `${name} rời khỏi nhóm`,
+            type: "text",
+            sentAt: ms,
+          }
+
+          var messages1: MessagesV = {
+            id_chatroom: this.item.id_chatroom,
+            id_send: 'system',
+            message: `${name} rời khỏi nhóm`,
+            type: "text",
+            sendAt: ms,
+          }
+         // this.router.onSameUrlNavigation = 'reload';
+         // window.location.reload()
+         this.reloadComponent()
+         this.messageService.sendMessage1(this.item.id_chatroom, messages1.message, messages1.id_send, ms, 'text', null).subscribe(message => {
+          //this.messageService.sendMessage(this.item.id_chatroom,messages).subscribe(message => {
+    
+           var messageJson = JSON.stringify(messages1)  
+  
+           // send message websocket
+           this.messageService.sendMessageWebsocket(messageJson)
+  
+          //this.messageService.sendMessageWebSocket(messageJson)
+  
+         },error => {logger("Message sending failed with error:", error);})
+  
+          // this.actionGenerated.emit({
+          //   type: enums.REMOVE_GROUP_PARTICIPANTS,
+          //   payLoad: memberToKick,
+          // });
+  
+        },error => {
+          logger(error);
         })
-        .catch((error) => {
-          logger("Group leaving failed with exception:", error);
-        });
+
+      }
+
+    
+
+
+      // CometChat.leaveGroup(guid)
+      //   .then((hasLeft) => {
+      //     logger("Group left successfully:", hasLeft);
+      //     this.actionGenerated.emit({
+      //       type: enums.LEFT_GROUP,
+      //       payLoad: this.item,
+      //     });
+      //   })
+      //   .catch((error) => {
+      //     logger("Group leaving failed with exception:", error);
+      //   });
+
+
     } catch (error) {
       logger(error);
     }

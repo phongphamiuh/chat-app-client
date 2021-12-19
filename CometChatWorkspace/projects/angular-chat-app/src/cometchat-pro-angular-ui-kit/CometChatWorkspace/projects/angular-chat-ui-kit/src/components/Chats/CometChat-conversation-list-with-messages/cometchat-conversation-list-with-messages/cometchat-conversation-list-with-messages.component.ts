@@ -471,10 +471,10 @@ export class CometChatConversationListWithMessagesComponent implements OnInit {
    */
   updateMembersCount = (item, count) => {
     try {
-      const group = Object.assign({}, this.item, { membersCount: count });
+      // const group = Object.assign({}, this.item, { membersCount: count });
 
-      this.item = group;
-      this.groupToUpdate = group;
+      // this.item = group;
+      // this.groupToUpdate = group;
     } catch (error) {
       logger(error);
     }

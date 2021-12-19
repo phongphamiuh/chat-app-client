@@ -55,7 +55,7 @@
       <div class="register-form">
         <form [formGroup]="registerForm" (ngSubmit) = "onSignUp()">
           <div class="form-group">
-            <label>name</label>
+            <label>Tên</label>
             <input
               type="text"
               formControlName="name"
@@ -69,7 +69,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label>Phone</label>
+            <label>Số điện thoại</label>
             <input
               type="text"
               formControlName="phone"
@@ -78,7 +78,7 @@
             />
             <div *ngIf="f.phone.errors && isValidFormSubmitted != null && !isValidFormSubmitted" [ngClass] = "'error'"> 
               <div *ngIf="f.phone.errors.required">
-                Yêu cầu nhập phone
+                Yêu cầu nhập Số điện thoại
               </div>  
             </div>
           </div>

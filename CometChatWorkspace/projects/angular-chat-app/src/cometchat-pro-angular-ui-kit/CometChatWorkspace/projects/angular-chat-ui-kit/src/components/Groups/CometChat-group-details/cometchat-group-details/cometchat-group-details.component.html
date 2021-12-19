@@ -37,7 +37,7 @@
     <!-- MEMBER SECTION ABOVE-->
 
     <!-- OPTION SECTION BELOW-->
-    <div class="sectionStyle">
+    <div class="sectionStyle" *ngIf="item.id_admin !== loggedInUser.id_user">
       <h6 class="sectionHeaderStyle">{{ OPTIONS }}</h6>
       <div class="sectionContentStyle">
         <div class="contentItemStyle leaveGroup">
@@ -58,12 +58,12 @@
         </div>
       </div> -->
       <!-- SHARED MEDIA SECTION BELOW-->
-      <div class="sharedMedia">
+      <!-- <div class="sharedMedia">
         <cometchat-shared-media
           [item]="item"
           [type]="type"
         ></cometchat-shared-media>
-      </div>
+      </div> -->
       <!-- SHARED MEDIA SECTION ABOVE-->
     </div>
     <!-- OPTION SECTION ABOVE-->
@@ -91,10 +91,10 @@
   ></cometchat-add-group-member-list>
 
   <!-- BANNED MEMBERS COMPONENT -->
-  <cometchat-ban-group-member-list-item
+  <!-- <cometchat-ban-group-member-list-item
     *ngIf="openBanMember"
     [item]="item"
     [bannedMemberList]="bannedMemberList"
     (actionGenerated)="actionHandler($event)"
-  ></cometchat-ban-group-member-list-item>
+  ></cometchat-ban-group-member-list-item> -->
 </div>

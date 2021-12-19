@@ -46,6 +46,8 @@ export class CometChatViewGroupMemberListItemComponent implements OnInit {
 
   ngOnInit() {
     try {
+
+      console.log("memsad" + JSON.stringify(this.member))
       this.userService.getUserById1(this.member.id_user).subscribe(user => {
         this.userMember = user
         this.nameMember = user.name
@@ -189,7 +191,7 @@ export class CometChatViewGroupMemberListItemComponent implements OnInit {
     try {
       this.actionGenerated.emit({
         type: enums.KICK,
-        payLoad: { member: this.member, scope: this.scope },
+        payLoad: { member: this.member, scope: this.scope, nameMember: this.nameMember },
       });
     } catch (error) {
       logger(error);

@@ -3,6 +3,7 @@ import { CometChat } from "@cometchat-pro/chat";
 import { COMETCHAT_CONSTANTS } from "../../../../utils/messageConstants";
 import * as enums from "../../../../utils/enums";
 import { logger } from "../../../../utils/common";
+import { UserService } from "../../../Users/User-Service/user.service";
 
 @Component({
   selector: "cometchat-action-message-bubble",
@@ -17,6 +18,9 @@ export class CometChatActionMessageBubbleComponent implements OnInit {
 
   ngOnInit() {
     try {
+      if(this.messageDetails.id_send === "system"){
+        this.message = this.messageDetails.message
+      }
       this.getMessage();
     } catch (error) {
       logger(error);

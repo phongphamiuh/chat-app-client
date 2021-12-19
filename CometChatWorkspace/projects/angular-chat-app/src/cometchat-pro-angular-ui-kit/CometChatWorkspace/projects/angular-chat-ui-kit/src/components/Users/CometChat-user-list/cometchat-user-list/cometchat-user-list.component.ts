@@ -97,38 +97,40 @@ export class CometChatUserListComponent
   }
 
   ngOnInit() {
-    console.log("user list" + JSON.stringify(this.usersList))
     try {
-      this.usersRequest = new CometChat.UsersRequestBuilder()
-        .friendsOnly(this.friendsOnly)
-        .setLimit(60)
-        .build();
 
-      let user = CometChat.getLoggedinUser().then(
-        (user) => {
-          this.fetchNextContactList();
-        },
-        (error) => {
-          logger("error getting details:", { error });
-        }
-      );
+      this.fetchNextContactList();
+
+      // this.usersRequest = new CometChat.UsersRequestBuilder()
+      //   .friendsOnly(this.friendsOnly)
+      //   .setLimit(60)
+      //   .build();
+
+      // let user = CometChat.getLoggedinUser().then(
+      //   (user) => {
+      //     this.fetchNextContactList();
+      //   },
+      //   (error) => {
+      //     logger("error getting details:", { error });
+      //   }
+      // );
 
       //Attaching User Listeners to dynamilcally update when a user comes online and goes offline
-      CometChat.addUserListener(
-        this.userListenerId,
-        new CometChat.UserListener({
-          onUserOnline: (onlineUser) => {
-            /* when someuser/friend comes online, user will be received here */
+      // CometChat.addUserListener(
+      //   this.userListenerId,
+      //   new CometChat.UserListener({
+      //     onUserOnline: (onlineUser) => {
+      //       /* when someuser/friend comes online, user will be received here */
 
-            this.userUpdated(onlineUser);
-          },
-          onUserOffline: (offlineUser) => {
-            /* when someuser/friend went offline, user will be received here */
+      //       this.userUpdated(onlineUser);
+      //     },
+      //     onUserOffline: (offlineUser) => {
+      //       /* when someuser/friend went offline, user will be received here */
 
-            this.userUpdated(offlineUser);
-          },
-        })
-      );
+      //       this.userUpdated(offlineUser);
+      //     },
+      //   })
+      // );
       
     } catch (error) {
       logger(error);
@@ -244,14 +246,16 @@ export class CometChatUserListComponent
     try {
       var uid = this.localStorageService.get("uid")
       this.userService.getConverByUserId(uid).subscribe(userList => {
-
-        if (userList.length === 0 && this.userSearches === true) { 
+        console.log("user list" + JSON.stringify(userList))
+        if (userList.length === 0) { 
           this.contactsNotFound = true;
           this.decoratorMsg = COMETCHAT_CONSTANTS.NO_USERS_FOUND;
         } else {
+          this.contactsNotFound = false;
           this.userSearches = false;
           this.usersList = [...this.usersList, ...userList];
           this.loader = false;
+         // console.log("user list" + JSON.stringify(this.userlist))
         }
       },error => {
         logger("User list fetching failed with error:", error);
@@ -305,7 +309,7 @@ export class CometChatUserListComponent
   onUserClicked(userToEmit) {
     try {
       this.onUserClick.emit(userToEmit);
-      this.messageService.removeMessageListener(this.item.id_chatroom)
+      //this.messageService.removeMessageListener(this.item.id_chatroom)
     } catch (error) {
       logger(error);
     }

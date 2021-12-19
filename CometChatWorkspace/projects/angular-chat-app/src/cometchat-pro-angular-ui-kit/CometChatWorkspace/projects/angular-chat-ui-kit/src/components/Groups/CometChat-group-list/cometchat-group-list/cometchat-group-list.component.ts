@@ -68,8 +68,8 @@ export class CometChatGroupListComponent
 
         if (
           prevProps.groupToUpdate &&
-          (prevProps.groupToUpdate.guid !== props.groupToUpdate.guid ||
-            (prevProps.groupToUpdate.guid === props.groupToUpdate.guid &&
+          (prevProps.groupToUpdate.id_chatroom !== props.groupToUpdate.id_chatroom ||
+            (prevProps.groupToUpdate.id_chatroom === props.groupToUpdate.id_chatroom &&
               (prevProps.groupToUpdate.membersCount !==
                 props.groupToUpdate.membersCount ||
                 prevProps.groupToUpdate.scope !== props.groupToUpdate.scope)))
@@ -78,7 +78,7 @@ export class CometChatGroupListComponent
           const groupToUpdate = this.groupToUpdate;
 
           const groupKey = groups.findIndex(
-            (group) => group.guid === groupToUpdate.guid
+            (group) => group.id_chatroom === groupToUpdate.id_chatroom
           );
           if (groupKey > -1) {
             const groupObj = groups[groupKey];
@@ -104,11 +104,11 @@ export class CometChatGroupListComponent
 
         if (
           prevProps.groupToLeave &&
-          prevProps.groupToLeave.guid !== props.groupToLeave.guid
+          prevProps.groupToLeave.id_chatroom !== props.groupToLeave.id_chatroom
         ) {
           const groups = [...this.groupList];
           const groupKey = groups.findIndex(
-            (member) => member.guid === props.groupToLeave.guid
+            (member) => member.id_chatroom === props.groupToLeave.id_chatroom
           );
 
           if (groupKey > -1) {
@@ -140,11 +140,11 @@ export class CometChatGroupListComponent
 
         if (
           prevProps.groupToDelete &&
-          prevProps.groupToDelete.guid !== props.groupToDelete.guid
+          prevProps.groupToDelete.id_chatroom !== props.groupToDelete.id_chatroom
         ) {
           const groups = [...this.groupList];
           const groupKey = groups.findIndex(
-            (member) => member.guid === props.groupToDelete.guid
+            (member) => member.id_chatroom === props.groupToDelete.id_chatroom
           );
           if (groupKey > -1) {
             groups.splice(groupKey, 1);
@@ -284,8 +284,7 @@ export class CometChatGroupListComponent
     try {
 
       this.decoratorMessage = COMETCHAT_CONSTANTS.LOADING_MESSSAGE;
-      var uid = this.localStorageService.get("uid"
-      )
+      var uid = this.localStorageService.get("uid")
       this.userService.getUserById1(uid).subscribe(user => {
         this.loggedInUser = user;
         this.userService.getGroupByUserId(user.id_user).subscribe(groupList => {
@@ -366,8 +365,18 @@ export class CometChatGroupListComponent
    */
   createGroupActionHandler = (group) => {
     try {
-      const groupList = [group, ...this.groupList];
-      this.groupList = groupList;
+      var uid = this.localStorageService.get("uid")
+      this.userService.getGroupByUserId(uid).subscribe(groupListRs => {
+
+        this.groupList = []
+
+        const groupList = [...groupListRs];
+        this.groupList = groupList;
+
+      },error => {
+        logger("[CometChatGroupList] getGroups fetchNextGroups error",error);
+      })
+
     } catch (error) {
       logger(error);
     }
@@ -378,27 +387,34 @@ export class CometChatGroupListComponent
    * @param Any group
    */
   groupClicked(group) {
-    try {
-      if (group.hasJoined === false) {
-        let password = "";
-        if (group.type === CometChat.GROUP_TYPE.PASSWORD) {
-          password = prompt(COMETCHAT_CONSTANTS.ENTER_YOUR_PASSWORD);
-        }
 
-        const guid = group.guid;
-        const groupType = group.type;
+    console.log("group click" + JSON.stringify(group))
 
-        this.joinGroup(guid, groupType, password);
-      } else {
-        this.onGroupClick.emit(group);
 
-        if (this.enableSelectedGroupStyling) {
-          this.selectedGroup = group;
-        }
-      }
-    } catch (error) {
-      logger(error);
-    }
+    this.selectedGroup = group
+    this.onGroupClick.emit(group)
+
+    // try {
+    //   if (group.hasJoined === false) {
+    //     let password = "";
+    //     if (group.type === CometChat.GROUP_TYPE.PASSWORD) {
+    //       password = prompt(COMETCHAT_CONSTANTS.ENTER_YOUR_PASSWORD);
+    //     }
+
+    //     const guid = group.guid;
+    //     const groupType = group.type;
+
+    //     this.joinGroup(guid, groupType, password);
+    //   } else {
+    //     this.onGroupClick.emit(group);
+
+    //     if (this.enableSelectedGroupStyling) {
+    //       this.selectedGroup = group;
+    //     }
+    //   }
+    // } catch (error) {
+    //   logger(error);
+    // }
   }
 
   /**

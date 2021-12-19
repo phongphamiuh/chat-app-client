@@ -86,6 +86,8 @@ export class CometChatMessageHeaderComponent
 
   ngOnInit() {
     try {
+
+      console.log("item header" + JSON.stringify(this.item))
       this.attachListeners();
 
       this.getLoggedInUserInfo();

@@ -1,8 +1,10 @@
 <div class="userDetailStyle">
+
   <div class="headerStyle">
     <div class="headerCloseStyle" (click)="closeThreadView()"></div>
     <h4 class="headerTitleStyle">{{ DETAILS }}</h4>
   </div>
+
   <div class="sectionStyle">
     <!-- BLOCKED USER VIEW -->
     <div class="privacySectionStyle">
@@ -15,6 +17,10 @@
           </div>
         </div>
       </div> -->
+
+      
+        <!-- <span>Name</span><span>{{user?.name}}</span> -->
+      
 
       <div class="sectionContentStyle">
         <div class="contentItemStyle">
@@ -33,5 +39,6 @@
         [type]="type"
       ></cometchat-shared-media>
     </div>
+    
   </div>
 </div>

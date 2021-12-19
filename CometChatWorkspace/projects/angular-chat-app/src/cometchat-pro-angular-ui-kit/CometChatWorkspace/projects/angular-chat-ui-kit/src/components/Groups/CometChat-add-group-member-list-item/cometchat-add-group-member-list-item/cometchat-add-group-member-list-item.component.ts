@@ -23,7 +23,7 @@ export class CometChatAddGroupMemberListItemComponent implements OnInit {
 
     try {
       this.checked = this.members.find(
-        (member) => member.uid === this.user.uid
+        (member) => member.id_user === this.user.id_user
       );
     } catch (error) {
       logger(error);

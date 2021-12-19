@@ -5,7 +5,7 @@
     <h4 class="groupHeaderTitleStyle">{{ GROUPS }}</h4>
     <div class="groupAddStyle" (click)="toggleCreateGroupView()"></div>
   </div>
-  <div class="groupSearchStyle">
+  <!-- <div class="groupSearchStyle">
     <input
       class="groupSearchInputStyle"
       type="text"
@@ -13,10 +13,10 @@
       [placeholder]="SEARCH"
       (keyup)="searchGroup($event)"
     />
-  </div>
-  <div class="groupMsgStyle">
+  </div> -->
+  <!-- <div class="groupMsgStyle">
     <p class="groupMsgTxtStyle">{{ decoratorMessage }}</p>
-  </div>
+  </div> -->
   <div class="groupListStyle" (scroll)="handleScroll($event)">
     <div *ngFor="let group of groupList">
       <cometchat-group-list-item

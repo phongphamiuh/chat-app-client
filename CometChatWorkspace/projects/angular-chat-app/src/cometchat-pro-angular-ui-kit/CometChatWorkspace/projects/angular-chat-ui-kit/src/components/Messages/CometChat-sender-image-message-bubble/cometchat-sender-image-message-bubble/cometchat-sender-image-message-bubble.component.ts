@@ -85,6 +85,7 @@ export class CometChatSenderImageMessageBubbleComponent implements OnInit {
    */
   setImage() {
     try {
+      console.log(JSON.stringify(this.messageDetails))
       this.imageLoader = true;
       if (this.messageDetails.hasOwnProperty(enums.METADATA)) {
         const metadata = this.messageDetails[enums.METADATA];
@@ -150,7 +151,7 @@ export class CometChatSenderImageMessageBubbleComponent implements OnInit {
   setMessageImageUrl() {
     try {
       let img = new Image();
-      img.src = this.messageDetails.data.url;
+      img.src = this.messageDetails.fileUrl;
       img.onload = () => {
         this.imageLoader = false;
         this.imageUrl = img.src;

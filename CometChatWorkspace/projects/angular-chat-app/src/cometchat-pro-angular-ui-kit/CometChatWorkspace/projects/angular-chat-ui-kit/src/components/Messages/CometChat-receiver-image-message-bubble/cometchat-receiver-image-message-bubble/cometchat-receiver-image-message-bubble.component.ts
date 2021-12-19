@@ -10,6 +10,7 @@ import { checkMessageForExtensionsData } from "../../../../utils/common";
 import * as enums from "../../../../utils/enums";
 import { logger } from "../../../../utils/common";
 import { CometChat } from "@cometchat-pro/chat";
+import { User, UserService } from "../../../Users/User-Service/user.service";
 
 @Component({
   selector: "cometchat-receiver-image-message-bubble",
@@ -19,6 +20,7 @@ import { CometChat } from "@cometchat-pro/chat";
 export class CometChatReceiverImageMessageBubbleComponent implements OnInit {
   @Input() messageDetails = null;
   @Input() showToolTip = true;
+  @Input() type: String = "";
   @Input() showReplyCount = true;
   @Input() loggedInUser;
   @Output() actionGenerated: EventEmitter<any> = new EventEmitter();
@@ -41,7 +43,7 @@ export class CometChatReceiverImageMessageBubbleComponent implements OnInit {
 
   GROUP: String = CometChat.RECEIVER_TYPE.GROUP;
 
-  constructor() {}
+  constructor(private userService: UserService) {}
 
   ngOnInit() {
     try {
@@ -53,11 +55,17 @@ export class CometChatReceiverImageMessageBubbleComponent implements OnInit {
       /**
        *  If Group then displays Avatar And Name
        */
-      if (this.messageDetails.receiverType === CometChat.RECEIVER_TYPE.GROUP) {
-        this.avatarIfGroup = true;
-        this.name = this.messageDetails.sender.name;
-        this.avatar = this.messageDetails.sender.avatar;
-      }
+
+       this.userService.getUserById1(this.messageDetails.id_send).subscribe(user => {
+        this.name = user.name;
+        this.avatar = user.url_avatar;
+      })
+
+      // if (this.messageDetails.receiverType === CometChat.RECEIVER_TYPE.GROUP) {
+      //   this.avatarIfGroup = true;
+      //   this.name = this.messageDetails.sender.name;
+      //   this.avatar = this.messageDetails.sender.avatar;
+      // }
       this.setImage();
     } catch (error) {
       logger(error);
@@ -136,7 +144,7 @@ export class CometChatReceiverImageMessageBubbleComponent implements OnInit {
   setMessageImageUrl = () => {
     try {
       let img = new Image();
-      img.src = this.messageDetails.data.url;
+      img.src = this.messageDetails.fileUrl;
       img.onload = () => {
         this.imageLoader = false;
         this.imageUrl = img.src;

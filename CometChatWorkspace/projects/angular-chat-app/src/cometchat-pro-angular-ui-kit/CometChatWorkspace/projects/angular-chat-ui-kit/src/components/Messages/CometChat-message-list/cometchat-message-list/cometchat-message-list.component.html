@@ -8,45 +8,71 @@
   <div class="listWrapperStyle">
     <!--message-->
     <div *ngFor="let msg of messages; let i = index">
+      
       <div class="messageDateContainerStyle" *ngIf="i === 0">
         <span class="messageDateStyle">{{
-          msg?.sentAt | date: "dd/MM/yyyy"
+          msg?.sendAt | date: "dd/MM/yyyy"
         }}</span>
       </div>
+      
       <div
         class="messageDateContainerStyle"
         *ngIf="
-          i > 0 && isDateDifferent(messages[i - 1]?.sentAt, messages[i]?.sentAt)
-        "
-      >
+          i > 0 && isDateDifferent(messages[i - 1]?.sendAt, messages[i]?.sendAt)">
         <span class="messageDateStyle">{{
-          msg?.sentAt | date: "dd/MM/yyyy"
+          msg?.sendAt | date: "dd/MM/yyyy"
         }}</span>
       </div>
       <!--CASE FOR CALL MESSAGES-->
-      <div *ngIf="msg?.category == CATEGORY_CALL">
+      <div>
+        <cometchat-action-message-bubble
+          [messageDetails]="msg"
+        ></cometchat-action-message-bubble>
+      </div>
+      <!-- <div *ngIf="msg?.category == CATEGORY_CALL">
         <cometchat-action-message-bubble
           [messageDetails]="msg"
           [loggedInUserUid]="loggedInUser?.uid"
         ></cometchat-action-message-bubble>
-      </div>
+      </div> -->
       <!--CASE FOR CALL MESSAGES ENDS-->
       <!-- CASE FOR DELETED MESSAGES -->
       <div *ngIf="msg?.deletedAt; else elseBlock">
         <cometchat-delete-message-bubble
           [messageDetails]="msg"
+          [type]="type"
           [loggedInUser]="loggedInUser"
         ></cometchat-delete-message-bubble>
       </div>
+
+      <!-- <div *ngIf="msg?.deletedAt; else elseBlock">
+        <comet-chat-delete-message-no-user
+          [messageDetails]="msg"
+          [loggedInUser]="loggedInUser"
+        ></comet-chat-delete-message-no-user>
+      </div> -->
       <!-- CASE FOR DELETED MESSAGES ENDS -->
 
       <ng-template #elseBlock>
         <!-- NgSwitchCase for different Types Of Bubble -->
         <div [ngSwitch]="msg.type">
           <!-- CASE FOR TEXT -->
+          <div *ngSwitchCase="delete">
+            <cometchat-delete-message-bubble
+            *ngIf="msg.id_send === loggedInUser.id_user && msg.id_send !== system"
+            [messageDetails]="msg"
+            [type]="type"
+            [loggedInUser]="loggedInUser"
+          ></cometchat-delete-message-bubble>
+          <comet-chat-delete-message-no-user
+          *ngIf="msg.id_send !== loggedInUser.id_user && msg.id_send !== system"
+          [messageDetails]="msg"
+          [loggedInUser]="loggedInUser"
+        ></comet-chat-delete-message-no-user>
+          </div>
           <div *ngSwitchCase="MESSAGE_TYPE_TEXT">
             <cometchat-receiver-text-message-bubble
-              *ngIf="msg.id_send !== loggedInUser.id_user"
+              *ngIf="msg.id_send !== loggedInUser.id_user && msg.id_send !== system"
               [item]="item"
               [type]="type"
               [messageDetails]="msg"
@@ -54,7 +80,7 @@
               (actionGenerated)="actionHandler($event)"
             ></cometchat-receiver-text-message-bubble>
             <cometchat-sender-text-message-bubble
-              *ngIf="msg.id_send === loggedInUser.id_user"
+              *ngIf="msg.id_send === loggedInUser.id_user && msg.id_send !== system"
               [messageDetails]="msg"
               [loggedInUser]="loggedInUser"
               (actionGenerated)="actionHandler($event)"
@@ -64,55 +90,58 @@
           <!--CASE FOR FILE-->
           <div *ngSwitchCase="MESSAGE_TYPE_FILE">
             <cometchat-sender-file-message-bubble
-              *ngIf="msg.id_send === loggedInUser.id_user"
+              *ngIf="msg.id_send === loggedInUser.id_user && msg.id_send !== system"
               [messageDetails]="msg"
               [loggedInUser]="loggedInUser"
               (actionGenerated)="actionHandler($event)"
             ></cometchat-sender-file-message-bubble>
             <cometchat-receiver-file-message-bubble
-              *ngIf="msg.id_send !== loggedInUser.id_user"
+              *ngIf="msg.id_send !== loggedInUser.id_user && msg.id_send !== system"
               [messageDetails]="msg"
+              [type]="type"
               [loggedInUser]="loggedInUser"
               (actionGenerated)="actionHandler($event)"
             ></cometchat-receiver-file-message-bubble>
           </div>
           <!--CASE FOR FILE ENDS-->
           <!--CASE FOR IMAGE -->
-          <!-- <div *ngSwitchCase="MESSAGE_TYPE_IMAGE">
+          <div *ngSwitchCase="MESSAGE_TYPE_IMAGE">
             <cometchat-sender-image-message-bubble
-              *ngIf="msg.sender.uid === loggedInUser.uid"
+              *ngIf="msg.id_send === loggedInUser.id_user && msg.id_send !== system"
               [messageDetails]="msg"
               [loggedInUser]="loggedInUser"
               (actionGenerated)="actionHandler($event)"
             ></cometchat-sender-image-message-bubble>
             <cometchat-receiver-image-message-bubble
-              *ngIf="msg.sender.uid !== loggedInUser.uid"
+              *ngIf="msg.id_send !== loggedInUser.id_user && msg.id_send !== system"
               [messageDetails]="msg"
+              [type]="type"
               [loggedInUser]="loggedInUser"
               (actionGenerated)="actionHandler($event)"
             >
             </cometchat-receiver-image-message-bubble>
-          </div> -->
+          </div>
           <!--CASE FOR IMAGE  ENDS-->
           <!--CASE FOR VIDEO -->
-          <!-- <div *ngSwitchCase="MESSAGE_TYPE_VIDEO">
+          <div *ngSwitchCase="MESSAGE_TYPE_VIDEO">
             <div *ngIf="msg.category !== CATEGORY_CALL">
               <cometchat-sender-video-message-bubble
-                *ngIf="msg.sender.uid === loggedInUser.uid"
+                *ngIf="msg.id_send === loggedInUser.id_user && msg.id_send !== system"
                 [messageDetails]="msg"
                 [loggedInUser]="loggedInUser"
                 (actionGenerated)="actionHandler($event)"
               >
               </cometchat-sender-video-message-bubble>
               <cometchat-receiver-video-message-bubble
-                *ngIf="msg.sender.uid !== loggedInUser.uid"
+                *ngIf="msg.id_send !== loggedInUser.id_user && msg.id_send !== system"
                 [messageDetails]="msg"
+                [type]="type"
                 [loggedInUser]="loggedInUser"
                 (actionGenerated)="actionHandler($event)"
               >
               </cometchat-receiver-video-message-bubble>
             </div>
-          </div> -->
+          </div>
           <!--CASE FOR VIDEO ENDS -->
 
           <!--CASE FOR Action Messages -->

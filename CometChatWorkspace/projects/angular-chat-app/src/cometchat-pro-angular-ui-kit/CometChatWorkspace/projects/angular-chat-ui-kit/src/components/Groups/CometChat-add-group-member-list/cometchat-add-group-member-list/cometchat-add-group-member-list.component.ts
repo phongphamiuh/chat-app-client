@@ -5,6 +5,8 @@ import {
   OnInit,
   Output,
   EventEmitter,
+  OnChanges,
+  SimpleChanges,
 } from "@angular/core";
 import { CometChat } from "@cometchat-pro/chat";
 import * as enums from "../../../../utils/enums";
@@ -13,13 +15,15 @@ import { logger } from "../../../../utils/common";
 import { UserService } from "../../../Users/User-Service/user.service";
 import { LocalStorageService } from "../../../Out-Service/local-storage.service";
 import { GroupService } from "../../Group-Service/group.service";
+import { Message, Messages, MessageService, MessagesV } from "../../../Messages/Message-Service/message.service";
+import { ThrowStmt } from "@angular/compiler";
 
 @Component({
   selector: "cometchat-add-group-member-list",
   templateUrl: "./cometchat-add-group-member-list.component.html",
   styleUrls: ["./cometchat-add-group-member-list.component.css"],
 })
-export class CometChatAddGroupMemberListComponent implements OnInit, OnDestroy {
+export class CometChatAddGroupMemberListComponent implements OnInit, OnDestroy, OnChanges {
   @Input() item = null;
   @Input() type = null;
   @Input() memberList = [];
@@ -44,7 +48,8 @@ export class CometChatAddGroupMemberListComponent implements OnInit, OnDestroy {
 
   constructor(private userService: UserService,
               private localStorageService: LocalStorageService,
-              private groupService: GroupService) {}
+              private groupService: GroupService,
+              private messageService: MessageService) {}
 
   ngOnInit() {
     try {
@@ -55,6 +60,9 @@ export class CometChatAddGroupMemberListComponent implements OnInit, OnDestroy {
     } catch (error) {
       logger(error);
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
   }
 
   ngOnDestroy() {
@@ -173,8 +181,26 @@ export class CometChatAddGroupMemberListComponent implements OnInit, OnDestroy {
         this.membersToAdd = [];
         this.membersToRemove = [];
         this.filteredList = [];
-        this.getUsers();
+        //this.getUsers();
+
+        //mycode
+        this.getUsersByKey(val)
       }, 500);
+    } catch (error) {
+      logger(error);
+    }
+  };
+
+  getUsersByKey = (key) => {
+    try {
+      var uid = this.localStorageService.get('uid')
+
+      this.userService.searchUser(uid,key, this.item.id_chatroom).subscribe(userList => {
+        this.filteredList = [...this.userlist, ...userList];
+      },error => {
+        this.decoratorMessage = COMETCHAT_CONSTANTS.ERROR;
+        logger("[CometChatAddMembers] getUsers fetchNext error", error);
+      })
     } catch (error) {
       logger(error);
     }
@@ -187,14 +213,22 @@ export class CometChatAddGroupMemberListComponent implements OnInit, OnDestroy {
   getUsers = () => {
     try {
       var uid = this.localStorageService.get('uid')
-      this.userService.getAllFriendsByUserId(uid).subscribe(userList => {
-        this.filteredList = [...this.userlist, ...userList];
 
-        //this.filteredList = [...this.userlist];
+      this.userService.searchUser(uid,'', this.item.id_chatroom).subscribe(userList => {
+        this.filteredList = [...this.userlist, ...userList];
       },error => {
         this.decoratorMessage = COMETCHAT_CONSTANTS.ERROR;
         logger("[CometChatAddMembers] getUsers fetchNext error", error);
       })
+
+      // this.userService.getAllFriendsByUserId(uid).subscribe(userList => {
+      //   this.filteredList = [...this.userlist, ...userList];
+
+      //   //this.filteredList = [...this.userlist];
+      // },error => {
+      //   this.decoratorMessage = COMETCHAT_CONSTANTS.ERROR;
+      //   logger("[CometChatAddMembers] getUsers fetchNext error", error);
+      // })
       
       // CometChat.getLoggedinUser()
       //   .then((user) => {
@@ -263,28 +297,28 @@ export class CometChatAddGroupMemberListComponent implements OnInit, OnDestroy {
    */
   membersUpdated = (user, userState) => {
     // my code
-    const members = [...this.membersToAdd];
-    members.push(user);
-    this.membersToAdd = [...members];
+    // const members = [...this.membersToAdd];
+    // members.push(user);
+    // this.membersToAdd = [...members];
 
-    // try {
-    //   if (userState) {
-    //     const members = [...this.membersToAdd];
-    //     members.push(user);
-    //     this.membersToAdd = [...members];
-    //   } else {
-    //     const membersToAdd = [...this.membersToAdd];
-    //     const IndexFound = membersToAdd.findIndex(
-    //       (member) => member.uid === user.uid
-    //     );
-    //     if (IndexFound > -1) {
-    //       membersToAdd.splice(IndexFound, 1);
-    //       this.membersToAdd = [...membersToAdd];
-    //     }
-    //   }
-    // } catch (error) {
-    //   logger(error);
-    // }
+    try {
+      if (userState) {
+        const members = [...this.membersToAdd];
+        members.push(user);
+        this.membersToAdd = [...members];
+      } else {
+        const membersToAdd = [...this.membersToAdd];
+        const IndexFound = membersToAdd.findIndex(
+          (member) => member.id_user === user.id_user
+        );
+        if (IndexFound > -1) {
+          membersToAdd.splice(IndexFound, 1);
+          this.membersToAdd = [...membersToAdd];
+        }
+      }
+    } catch (error) {
+      logger(error);
+    }
 
 
   };
@@ -370,9 +404,58 @@ export class CometChatAddGroupMemberListComponent implements OnInit, OnDestroy {
 
   console.log("member to add  " + JSON.stringify(this.membersToAdd))
 
+    // this.membersToAdd.forEach(newMember => {
+    //   this.groupService.addMemberToGroup(this.item.id_chatroom, newMember.id_user,"default",uid).subscribe(res => {
+    //     this.closeAddMembersView();
+
+    //     this.actionGenerated.emit({
+    //       type: enums.ADD_GROUP_PARTICIPANTS,
+    //       payLoad: this.membersToAdd,
+    //     });
+
+    //     //window.location.reload()
+    //   })
+    // },error => {
+    //   logger("addMembersToGroup failed with exception:", error);
+    // })
+
     this.membersToAdd.forEach(newMember => {
-      this.groupService.addMemberToGroup(this.item.id_chatroom, newMember.id_user,"default",uid).subscribe(res => {
+      this.groupService.addMemberToGroup1(this.item.id_chatroom, newMember.id_user,uid).subscribe(res => {
         this.closeAddMembersView();
+
+        let ms = Date.now();
+
+        var messages: MessagesV = {
+          id_chatroom: this.item.id_chatroom,
+          id_send: 'system',
+          message: `${newMember.name} tham gia nhóm`,
+          type: "text",
+          sendAt: ms,
+        }
+
+       
+
+        this.messageService.sendMessage1(this.item.id_chatroom, messages.message, messages.id_send, ms, 'text', '').subscribe(message => {
+        //this.messageService.sendMessage(this.item.id_chatroom,messages).subscribe(message => {
+  
+           this.actionGenerated.emit({
+            type: enums.MESSAGE_COMPOSED,
+            payLoad: [messages],
+          });
+          
+          var messageJson = JSON.stringify(messages)  
+
+          // send message websocket
+         // this.messageService.sendMessageWebsocket(messageJson)
+
+         //this.messageService.sendMessageSocket(messageJson)
+
+         this.messageService.sendMessageWebsocket(messageJson)
+
+        },error => {logger("Message sending failed with error:", error);})
+  
+
+        //this.messageService.sendMessageWebsocket()
 
         this.actionGenerated.emit({
           type: enums.ADD_GROUP_PARTICIPANTS,

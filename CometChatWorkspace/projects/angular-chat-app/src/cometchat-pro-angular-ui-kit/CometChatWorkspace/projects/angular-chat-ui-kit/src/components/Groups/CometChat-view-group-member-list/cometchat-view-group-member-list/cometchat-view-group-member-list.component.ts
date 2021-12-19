@@ -4,6 +4,9 @@ import * as enums from "../../../../utils/enums";
 import { COMETCHAT_CONSTANTS } from "../../../../utils/messageConstants";
 import { logger } from "../../../../utils/common";
 import { GroupService } from "../../Group-Service/group.service";
+import { Messages, MessageService, MessagesV } from "../../../Messages/Message-Service/message.service";
+import { LocalStorageService } from "../../../Out-Service/local-storage.service";
+import { User } from "../../../Users/User-Service/user.service";
 @Component({
   selector: "cometchat-view-group-member-list",
   templateUrl: "./cometchat-view-group-member-list.component.html",
@@ -24,7 +27,7 @@ export class CometChatViewGroupMemberListComponent implements OnInit {
 
   @Output() actionGenerated: EventEmitter<any> = new EventEmitter();
 
-  constructor(private groupServide: GroupService) {}
+  constructor(private groupServide: GroupService, private messageService: MessageService, private localStora: LocalStorageService) {}
 
   ngOnInit() {}
 
@@ -46,7 +49,7 @@ export class CometChatViewGroupMemberListComponent implements OnInit {
           break;
         }
         case enums.KICK: {
-          this.kickMember(data.member);
+          this.kickMember(data.member, data.nameMember);
           break;
         }
       }
@@ -111,17 +114,62 @@ export class CometChatViewGroupMemberListComponent implements OnInit {
    * kicks the member member of a group
    * @param Any memberToKick
    */
-  kickMember = (memberToKick) => {
+  kickMember = (memberToKick, nameMember) => {
     try {
       const guid = this.item.guid;
-      this.groupServide.kickMember(memberToKick.id_chatgroup, memberToKick.id_user).subscribe(res => {
-        this.actionGenerated.emit({
-          type: enums.REMOVE_GROUP_PARTICIPANTS,
-          payLoad: memberToKick,
-        });
-      },error => {
-        logger(error);
-      })
+      
+      let idAdmin = this.item.id_admin
+      let id = this.localStora.get('uid')
+
+      console.log("addmin" + idAdmin)
+      console.log("user.dasd " + id)
+      if(idAdmin === id) {
+        this.groupServide.kickMember(memberToKick.id_chatgroup, memberToKick.id_user).subscribe(res => {
+
+          let ms = Date.now();
+          console.log("member to kick" + JSON.stringify(memberToKick))
+  
+          var messages: Messages = {
+            id_chatroom: this.item.id_chatroom,
+            id_send: 'system',
+            message: `${nameMember} rời khỏi nhóm`,
+            type: "text",
+            sentAt: ms,
+          }
+
+          var messages1: MessagesV = {
+            id_chatroom: this.item.id_chatroom,
+            id_send: 'system',
+            message: `${nameMember} rời khỏi nhóm`,
+            type: "text",
+            sendAt: ms,
+          }
+          this.messageService.sendMessage1(this.item.id_chatroom, messages.message, 'system', ms, 'text', null).subscribe(message => {
+          //this.messageService.sendMessage(this.item.id_chatroom,messages).subscribe(message => {
+    
+           var messageJson = JSON.stringify(messages1)  
+  
+           // send message websocket
+           this.messageService.sendMessageWebsocket(messageJson)
+  
+          //this.messageService.sendMessageWebSocket(messageJson)
+  
+         },error => {logger("Message sending failed with error:", error);})
+  
+  
+  
+          this.actionGenerated.emit({
+            type: enums.REMOVE_GROUP_PARTICIPANTS,
+            payLoad: memberToKick,
+          });
+  
+        },error => {
+          logger(error);
+        })
+      }else{
+        alert("Không thực hiện được")
+      }
+     
 
       // CometChat.kickGroupMember(guid, memberToKick.uid)
       //   .then((response) => {

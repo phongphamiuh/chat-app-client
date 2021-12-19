@@ -45,7 +45,7 @@ export class CometChatSenderVideoMessageBubbleComponent implements OnInit {
    */
   getUrl() {
     try {
-      this.videoUrl = this.messageDetails.data.url;
+      this.videoUrl = this.messageDetails.fileUrl;
     } catch (error) {
       logger(error);
     }

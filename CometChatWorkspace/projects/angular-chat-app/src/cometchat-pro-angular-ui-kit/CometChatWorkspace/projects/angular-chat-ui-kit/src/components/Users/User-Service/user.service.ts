@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { MessageResponse } from '../../Messages/Message-Service/message.service';
 
 const apiUrl = 'http://localhost:8080/users';
-const apiUrlVari = 'http://localhost:3000/Users';
-const apiUrlConversation = 'http://localhost:3000/Chatroom'
-const apiUrlFriends = 'http://localhost:3000/Friend'
+const apiUrlVari = 'http://ec2-52-221-232-82.ap-southeast-1.compute.amazonaws.com:3000/Users';
+const apiUrlConversation = 'http://ec2-52-221-232-82.ap-southeast-1.compute.amazonaws.com:3000/Chatroom'
+const apiUrlFriends = 'http://ec2-52-221-232-82.ap-southeast-1.compute.amazonaws.com:3000/Friend'
 
-const apiUrlFriendRequest = 'http://localhost:3000/Friendrequest'
+const apiUrlFriendRequest = 'http://ec2-52-221-232-82.ap-southeast-1.compute.amazonaws.com:3000/Friendrequest'
 
-const apiss = 'http://localhost:3000/Conversations'
+const apiss = 'http://ec2-52-221-232-82.ap-southeast-1.compute.amazonaws.com:3000/Conversations'
 @Injectable({
   providedIn: 'root'
 })
@@ -29,6 +30,29 @@ export class UserService {
     return this.httpClient.get<UserData>(apiUrlVari +`/${uid}`).pipe()
   }
 
+  update(uid: String, urlUpdate: UpdateImgRequest): Observable<ResponseMessage> {
+
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    }
+    const body = JSON.stringify(urlUpdate);
+    return this.httpClient.put<ResponseMessage>(apiUrlVari + `/${uid}`, body, httpOptions).pipe()
+
+   // return this.httpClient.get<ResponseMessage>(apiUrlVari +`/${uid}`).pipe()
+  }
+
+  updateUser(uid: String, urlUpdate: UserUpdateRequest): Observable<ResponseMessage> {
+
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    }
+    const body = JSON.stringify(urlUpdate);
+    return this.httpClient.put<ResponseMessage>(apiUrlVari + `/${uid}`, body, httpOptions).pipe()
+
+   // return this.httpClient.get<ResponseMessage>(apiUrlVari +`/${uid}`).pipe()
+  }
+
+
   save(user: User): Observable<User> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -37,12 +61,13 @@ export class UserService {
     return this.httpClient.post<User>(apiUrl,body,httpOptions)
   }
 
-  saveVari(uid: String,name: String, phone: String): Observable<User> {
+  saveVari(uid: String,name: String, phone: String): Observable<ResponseMessage> {
     const httpOptions = {
       headers: new HttpHeaders({'Content-Type': 'application/json'})
     }
+    let of = 'online'
     //const body=JSON.stringify(user);
-    return this.httpClient.post<User>(apiUrlVari + `?id_user=${uid}&name=${name}&phone=${phone}`,httpOptions)
+    return this.httpClient.post<ResponseMessage>(apiUrlVari + `?id_user=${uid}&name=${name}&phonenumber=${phone}&status=${of}`,httpOptions)
   }
 
   getFriendsByUser(uid: String): Observable<User[]> {
@@ -55,6 +80,10 @@ export class UserService {
 
   getConversationByUserId(uid: String): Observable<Conversation[]>{ 
     return this.httpClient.get<Conversation[]>(apiUrlConversation + `/conversation/?id_user=${uid}`).pipe()
+  }
+
+  getUserNotPersonal(idChatRoom: String, idUser): Observable<Conversation1>{
+    return this.httpClient.get<Conversation1>(apiUrlVari + `/personal/w?id_chatroom=${idChatRoom}&id_user=${idUser}`)
   }
 
   getConverByUserId(uid: String): Observable<Conversation[]>{ 
@@ -120,6 +149,23 @@ export class UserService {
     return this.httpClient.post<ResponseMessage>(apiUrlConversation + `?id_user=${idUser}&id_user_request=${idUserRequest}`, httpOptions)
   }
 
+
+  searchUser(idUser:String,char: String, idChatGroup: String): Observable<UserData[]> {
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'})
+    }
+    return this.httpClient.get<UserData[]>(apiUrlVari + `/search/abc?id_user=${idUser}&char=${char}&id_chatgroup=${idChatGroup}`, httpOptions)
+  }
+
+}
+
+export interface UserUpdateRequest{
+  name: string;
+  birthday: number;
+}
+
+export interface UpdateImgRequest{
+  url_avatar: string;
 }
 export interface ResponseMessage {
   message: string

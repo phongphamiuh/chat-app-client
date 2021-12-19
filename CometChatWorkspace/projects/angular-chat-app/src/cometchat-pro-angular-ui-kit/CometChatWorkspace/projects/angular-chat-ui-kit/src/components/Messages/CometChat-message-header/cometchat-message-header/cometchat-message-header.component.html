@@ -7,10 +7,12 @@
       <cometchat-avatar
         [item]="item"
         [userStatus]="item?.status"
+        [userHasId]="item.name"
       ></cometchat-avatar>
     </div>
     <div class="chatUserStyle">
       <!-- Add Tool Tip functions here -->
+      <h6 class="chatNameStyle" *ngIf="item.is_group_chat === 1">{{ item.name_chatroom }}</h6>
       <h6 class="chatNameStyle">{{ item.name }}</h6>
       <div class="chatStatusStyle typing" *ngIf="isTyping">{{ status }}</div>
       <!-- Add Mouse Event to status -->

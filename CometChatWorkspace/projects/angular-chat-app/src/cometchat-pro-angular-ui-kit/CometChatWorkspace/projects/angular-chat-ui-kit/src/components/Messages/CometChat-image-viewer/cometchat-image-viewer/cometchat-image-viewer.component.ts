@@ -29,7 +29,7 @@ export class CometChatImageViewerComponent implements OnInit {
   getUrl() {
     try {
       let img = new Image();
-      img.src = this.messageDetails.data.url;
+      img.src = this.messageDetails.fileUrl;
       this.imageUrl = img.src;
     } catch (error) {
       logger(error);

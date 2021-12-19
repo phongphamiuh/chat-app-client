@@ -4,7 +4,8 @@
     <div class="avatarStyle">
       <cometchat-avatar
         [item]="userMember"
-        [userStatus]="member?.status"
+        [userId]="member?.id_user"
+        [userStatus]="userMember?.status"
       ></cometchat-avatar>
     </div>
 
@@ -45,12 +46,12 @@
     <span class="roleStyle" *ngIf="!showChangeScope">
       {{ member?.role }}
     </span>
-    <img
+    <!-- <img
       *ngIf="!showChangeScope && hasGreaterRole"
       (click)="toggleChangeScope(true)"
       [src]="editScopeIcon"
       loading="lazy"
-    />
+    /> -->
     <!-- Current Scope -->
   </td>
   <!-- <td class="actionColumnStyle">
@@ -66,7 +67,7 @@
   <td class="actionColumnStyle">
     <span>
       <!-- kick icon -->
-      <button *ngIf="member?.role != 'admin'"
+      <button *ngIf="member?.role != 'admin' && loggedInUser?.id_user !== member?.id_user"
       (click)="kickMember()">
       Mời ra khỏi nhóm
       </button>

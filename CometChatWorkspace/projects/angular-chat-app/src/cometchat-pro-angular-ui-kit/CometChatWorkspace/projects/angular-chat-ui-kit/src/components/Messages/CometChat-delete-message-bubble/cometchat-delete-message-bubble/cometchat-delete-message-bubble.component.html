@@ -19,10 +19,10 @@
   <div class="deletedMessageWrapperStyle">
     <div
       class="messageThumbnailStyle"
-      *ngIf="messageDetails?.receiverType == GROUP"
-    >
+      *ngIf="type == GROUP">
       <cometchat-avatar
         [item]="messageDetails?.sender"
+        [userId]="messageDetails?.id_send"
         [enableUserStatus]="false"
         class="avatarStyle"
       ></cometchat-avatar>
@@ -30,10 +30,10 @@
     <div class="messageDetailStyle">
       <div
         class="nameWrapperStyle"
-        *ngIf="messageDetails?.receiverType == GROUP"
+        *ngIf="type == GROUP"
       >
         <span class="nameStyle">
-          {{ messageDetails?.sender?.name }}
+          {{ messageDetails?.name }}
         </span>
       </div>
       <div class="messageTxtWrapperStyle deletedMessageReceivedStyle">

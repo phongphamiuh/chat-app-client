@@ -26,7 +26,8 @@ export const checkMessageForExtensionsData = (message, extensionKey) => {
  */
 export const getSentAtTime = (message) => {
   try {
-    let msgSentAt = message.sentAt;
+    console.log("aksjddddddddddddddddd" + message.sendAt)
+    let msgSentAt = message.sendAt;
     msgSentAt = msgSentAt ;
 
     return msgSentAt;

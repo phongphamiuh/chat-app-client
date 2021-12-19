@@ -7,10 +7,10 @@
 
   <div class="contactHeaderStyle1">
     <h4 class="contactHeaderTitleStyle1">{{ LIST_ADD_FRIEND }}</h4>
-    <div class="friendsAddStyle" (click)="toggleListAddFriendsView()"></div>
+    <div class="friendsAddStyle1" (click)="toggleListAddFriendsView()"></div>
     <div></div>
   </div>
-  <div class="contactSearchStyle">
+  <!-- <div class="contactSearchStyle">
     <input
       class="contactSearchInputStyle"
       [placeholder]="SEARCH"
@@ -19,20 +19,21 @@
       (keyup)="searchUsers(search.value)"
       autocomplete="off"
     />
-  </div>
+  </div> -->
 
-  <div *ngIf="loader" class="contactMsgStyle">
+  <!-- <div *ngIf="loader" class="contactMsgStyle">
     <p class="contactTxtMsgStyle">
       {{ decoratorMsg }}
     </p>
-  </div>
+  </div> -->
 
   <div class="contactListStyle" (scroll)="handleScroll($event)">
-    <div *ngIf="contactsNotFound" class="contactMsgStyle">
+    <!-- <div *ngIf="contactsNotFound" class="contactMsgStyle">
       <p class="contactTxtMsgStyle">
+        
         {{ decoratorMsg }}
       </p>
-    </div>
+    </div> -->
     
     <div class="contactAlphabetStyle" *ngFor="let user of usersList; let i = index">
 
@@ -50,9 +51,14 @@
       <div class="contactNameStyle" (click)="onUserClicked(user)">
         <div class="listItem">
           <div class="itemThumbnailStyle">
-            <cometchat-avatar
+            <!-- <cometchat-avatar
               [item]="user"
               [userStatus]="user.status"
+              class="avatarContact"
+            ></cometchat-avatar> -->
+
+            <cometchat-avatar
+              [item]="user"    
               class="avatarContact"
             ></cometchat-avatar>
           </div>

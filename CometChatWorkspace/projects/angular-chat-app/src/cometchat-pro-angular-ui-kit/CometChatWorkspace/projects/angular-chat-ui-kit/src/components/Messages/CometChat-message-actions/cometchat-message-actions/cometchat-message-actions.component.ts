@@ -31,21 +31,21 @@ export class CometChatMessageActionsComponent implements OnInit {
 
   ngOnInit() {
     try {
-      if (this.messageDetails.hasOwnProperty(enums.PARENT_MESSAGE_ID)) {
-        //you cannot reply any message inside thread window
-        this.showReplyOption = false;
-        this.threadView = true;
-      }
+      // if (this.messageDetails.hasOwnProperty(enums.PARENT_MESSAGE_ID)) {
+      //   //you cannot reply any message inside thread window
+      //   this.showReplyOption = false;
+      //   this.threadView = true;
+      // }
 
-      let user = CometChat.getLoggedinUser().then((user) => {
-        this.loggedInUser = user;
+      // let user = CometChat.getLoggedinUser().then((user) => {
+      //   this.loggedInUser = user;
 
-        //for the message that is received , only show the reply button in tooltip
-        if (this.messageDetails.sender.uid !== this.loggedInUser.uid) {
-          this.showOnlyReplyButton = true;
-          this.receivedMessage = true;
-        }
-      });
+      //   //for the message that is received , only show the reply button in tooltip
+      //   if (this.messageDetails.user_id !== this.loggedInUser.user_id) {
+      //     this.showOnlyReplyButton = true;
+      //     this.receivedMessage = true;
+      //   }
+      // });
     } catch (error) {
       logger(error);
     }

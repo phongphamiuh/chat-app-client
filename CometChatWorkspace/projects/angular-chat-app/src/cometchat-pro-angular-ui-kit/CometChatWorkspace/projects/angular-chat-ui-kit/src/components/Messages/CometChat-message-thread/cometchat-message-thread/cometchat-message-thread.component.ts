@@ -467,7 +467,7 @@ export class CometChatMessageThreadComponent implements OnInit, OnChanges {
   /**
    * Sets reaction to message
    * @param message
-   */
+   */   
   reactToMessage(message) {
     try {
       this.messageToReact = message;

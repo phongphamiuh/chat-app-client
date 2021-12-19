@@ -330,6 +330,7 @@ export class CometChatUIComponent implements OnInit {
    */
   toggleImageView(message) {
     try {
+      console.log(JSON.stringify(message))
       this.imageView = message;
       this.fullScreenViewImage = !this.fullScreenViewImage;
     } catch (error) {
@@ -445,6 +446,7 @@ export class CometChatUIComponent implements OnInit {
   membersAdded = (members) => {
     try {
       const messageList = [];
+      
       members.forEach((eachMember) => {
         const message = `${this.loggedInUser.name} added ${eachMember.name}`;
         const date: any = new Date();
@@ -470,9 +472,11 @@ export class CometChatUIComponent implements OnInit {
    */
   updateMembersCount = (item, count) => {
     try {
+
+      console.log("ui item ................" + JSON.stringify(this.item))
       const group = Object.assign({}, this.item, { membersCount: count });
 
-      this.item = group;
+      //this.item = group;
       this.groupToUpdate = group;
     } catch (error) {
       logger(error);

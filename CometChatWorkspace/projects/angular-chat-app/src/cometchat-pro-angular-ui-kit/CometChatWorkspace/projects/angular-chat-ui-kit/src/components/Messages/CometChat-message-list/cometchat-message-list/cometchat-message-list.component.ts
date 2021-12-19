@@ -60,7 +60,8 @@ export class CometChatMessageListComponent
   CATEGORY_MESSAGE: String = CometChat.CATEGORY_MESSAGE;
   CATEGORY_ACTION: String = CometChat.CATEGORY_ACTION;
   CATEGORY_CALL: String = CometChat.CATEGORY_CALL;
-
+  system: String = "system"
+  MESSAGE_TYPE_DELETE = "delete"
   categories = [
     CometChat.CATEGORY_MESSAGE,
     CometChat.MESSAGE_TYPE.CUSTOM,
@@ -86,17 +87,19 @@ export class CometChatMessageListComponent
   webSocketAPI: WebSocketAPI;
 
   constructor(private ref: ChangeDetectorRef,
-     public datepipe: DatePipe,
-     private messageService: MessageService,
-     private userService: UserService,
-     private localStorageService: LocalStorageService) {
+    public datepipe: DatePipe,
+    private messageService: MessageService,
+    private userService: UserService,
+    private localStorageService: LocalStorageService) {
     try {
 
-      this.subscription = this.messageService.getMessage().subscribe(message => { 
+      this.subscription = this.messageService.getMessage().subscribe(message => {
+        console.log('mesadkjasd' + JSON.stringify(message))
         this.actionGenerated.emit({
           type: enums.MESSAGE_RECEIVED,
           payLoad: [message],
         });
+
       });
 
       setInterval(() => {
@@ -112,9 +115,79 @@ export class CometChatMessageListComponent
 
   ngOnChanges(change: SimpleChanges) {
     try {
-      //this.addMessageEventListeners();
+      
+      console.log("message ")
+      // console.log('change' + JSON.stringify(change[enums.ITEM].firstChange))
+
+      console.log("change................................")
+      //this.messageService.removeMessageListener(this.item.id_chatroom);
+      //this.createMessageRequestObjectAndGetMessages();
+
+      //this.messageService.initializeWebSocketConnection(this.item.id_chatroom)
+      //this.messageService._disconnect()
+
+
+
+
+
+      // this.messageService.initializeWebSocketConnection(this.item.id_chatroom)
+
+
+      //  if (change[enums.ITEM]){
+      //   this.createMessageRequestObjectAndGetMessages();
+      //   this.messageService.removeMessageListener(this.item.id_chatroom);
+      //   this.messageService.initializeWebSocketConnection(this.item.id_chatroom)
+      //  }
+
+
+      //this.messageService.removeWebsocketAll()
+
+      // this.messageService.initWebsocket1(this.item.id_chatroom).subscribe(rs => {
+      //   let a = [rs]
+      //   console.log('...............' + JSON.stringify(a))
+      //   this.actionGenerated.emit({
+      //     type: enums.MESSAGE_RECEIVED,
+      //     payLoad: [rs],
+      //   });
+      // })
+      //this.messageService.removeWebsocketAll()
+      //console.log('change 1........ ' + JSON.stringify(change))
+      //this.messageService.removeWebsocket(change[enums.ITEM].previousValue.id_chatroom)
       if (change[enums.ITEM]) {
-        console.log("change................................")
+
+        this.createMessageRequestObjectAndGetMessages();
+
+
+       // console.log("on change   id chat room " + this.item.id_chatroom)
+
+        // console.log(JSON.stringify(change[enums.ITEM].previousValue.id_chatroom))
+        // console.log('change 2........ ' + JSON.stringify(change))
+        // this.messageService.removeWebsocket(change[enums.ITEM].previousValue.id_chatroom)
+        
+        //this.messageService.clearMessage()
+        //this.messageService.uns()
+        this.messageService.removeWebsocketAll()
+
+        //this.subscription.remove
+
+       // this.messageService.initWebsocket1(this.item.id_chatroom).subscribe().unsubscribe()
+
+        this.messageService.initWebsocket1(this.item.id_chatroom)
+        // .subscribe(rs => {
+        //   let a = [rs]
+        //   //this.messageService.removeWebsocketAll()
+        //   console.log('onchang e............wqe...........' + JSON.stringify(a))
+        //   this.actionGenerated.emit({
+        //     type: enums.MESSAGE_RECEIVED,
+        //     payLoad: [rs],
+        //   });
+        //   //this.messageService.removeWebsocketAll()
+        // })
+
+       
+
+        //this.messageService.removeWebsocketAll()
+
         //Removing Previous Conversation Listeners
         // CometChat.removeMessageListener(this.msgListenerId);
         // CometChat.removeGroupListener(this.groupListenerId);
@@ -123,23 +196,21 @@ export class CometChatMessageListComponent
         // this.msgListenerId = enums.MESSAGE_ + new Date().getTime();
         // this.groupListenerId = enums.GROUP_ + new Date().getTime();
         // this.callListenerId = enums.CALL_ + new Date().getTime();
-        this.messageService.removeMessageListener(this.item.id_chatroom);
 
-        this.createMessageRequestObjectAndGetMessages();
+        // this.messageService.removeMessageListener(this.item.id_chatroom);
+
+        
 
         //Attach MessageListeners for the new conversation
         //this.addMessageEventListeners();
         //this.messageService.removeMessageListener(this.item.id_chatroom);
-      
-        console.log('id chat room is : ' + this.item.id_chatroom)
-        this.messageService.initializeWebSocketConnection(this.item.id_chatroom)
 
+        // console.log('id chat room is : ' + this.item.id_chatroom)
+        // this.messageService.initializeWebSocketConnection(this.item.id_chatroom)
 
+        // this.messageService.removeMessageListener(this.item.id_chatroom);
 
-
-        //this.messageService.removeMessageListener(this.i);
-
-       this.messageService._disconnect()
+        //this.messageService._disconnect()
 
         // this.actionGenerated.emit({
         //   type: enums.MESSAGE_RECEIVED,
@@ -147,15 +218,17 @@ export class CometChatMessageListComponent
         // });
       }
 
-      if (change[enums.REACHED_TOP_OF_CONVERSATION]) {
-        console.log("REACHED_TOP_OF_CONVERSATION")
-        if (change[enums.REACHED_TOP_OF_CONVERSATION].currentValue) {
-          this.getMessages(false, false, true);
-        }
-      }
+      // if (change[enums.REACHED_TOP_OF_CONVERSATION]) {
+      //   console.log("REACHED_TOP_OF_CONVERSATION")
+      //   if (change[enums.REACHED_TOP_OF_CONVERSATION].currentValue) {
+      //     this.getMessages(false, false, true);
+      //   }
+      // }
 
       //new thread opened
       if (change[enums.PARENT_MESSAGE_ID]) {
+        console.log("PARENT_MESSAGE_ID")
+       // this.messageService.removeWebsocketAll()
         //Removing Previous thread Listeners
         CometChat.removeMessageListener(this.msgListenerId);
         this.msgListenerId = enums.MESSAGE_ + new Date().getTime();
@@ -179,8 +252,25 @@ export class CometChatMessageListComponent
     try {
       console.log("on init .............................")
       //this.webSocketAPI = new WebSocketAPI(this);
+      console.log('message' + JSON.stringify(this.messages))
       this.createMessageRequestObjectAndGetMessages();
-      this.messageService.initializeWebSocketConnection(this.item.id_chatroom)
+      console.log("oninit   id chat room " + this.item.id_chatroom)
+      let rs = this.messageService.initWebsocket1(this.item.id_chatroom)
+      // .subscribe(rs => {
+      //   let a = [rs]
+      //   console.log('...............' + JSON.stringify(a))
+      //   //this.messageService.removeWebsocketAll()
+      //   this.actionGenerated.emit({
+      //     type: enums.MESSAGE_RECEIVED,
+      //     payLoad: [rs],
+      //   });
+      //   //this.messageService.removeWebsocketAll()
+      // })
+
+      //rs.unsubscribe()
+      
+      //this.messageService.initializeWebSocketConnection(this.item.id_chatroom)
+      //this.messageService.removeWebsocketAll()
       // Attach MessageListeners Here
       //this.addMessageEventListeners();
     } catch (error) {
@@ -191,13 +281,13 @@ export class CometChatMessageListComponent
   ngOnDestroy() {
     try {
       //Removing Message Listeners
+      this.messageService.removeWebsocketAll()
       console.log("destroy ...............................");
       this.messageService.removeMessageListener(this.item.id_chatroom)
-      this.messageService.deleteMessageListenerById(this.msgListenerId)
 
-      CometChat.removeMessageListener("123");
-      CometChat.removeGroupListener(this.groupListenerId);
-      CometChat.removeCallListener(this.callListenerId);
+      // CometChat.removeMessageListener("123");
+      // CometChat.removeGroupListener(this.groupListenerId);
+      // CometChat.removeCallListener(this.callListenerId);
 
       this.subscription.unsubscribe();
     } catch (error) {
@@ -234,9 +324,7 @@ export class CometChatMessageListComponent
    * Listener To Receive Messages in Real Time
    * @param
    */
-  addMessageEventListeners() {  
-
-    console.log("add message listener =================================================")
+  addMessageEventListeners() {
 
     // this.messageService.saveMessageLtn(message).subscribe(message => {})
 
@@ -253,7 +341,7 @@ export class CometChatMessageListComponent
     //     payLoad: [messages],
     //   });
     // })
-  
+
     try {
       // CometChat.addMessageListener(
       //   this.msgListenerId,
@@ -451,110 +539,11 @@ export class CometChatMessageListComponent
     scrollToTop = false
   ) {
     try {
+
       this.decoratorMessage = COMETCHAT_CONSTANTS.LOADING_MESSSAGE;
       const actionMessages = [];
 
-      // let user = CometChat.getLoggedinUser().then(
-      //   (user) => {
-      //     this.loggedInUser = user;
-
-      //     this.messagesRequest.fetchPrevious().then(
-      //       (messageList) => {
-      //         // No Messages Found
-      //         if (messageList.length === 0 && this.messages.length === 0) {
-      //           this.decoratorMessage = COMETCHAT_CONSTANTS.NO_MESSAGES_FOUND;
-      //         } else {
-      //           this.decoratorMessage = "";
-      //         }
-
-      //         messageList.forEach((message) => {
-      //           if (
-      //             message.category === CometChat.CATEGORY_ACTION &&
-      //             message.sender.uid === enums.APP_SYSTEM
-      //           ) {
-      //             actionMessages.push(message);
-      //           }
-
-      //           //if the sender of the message is not the loggedin user, mark it as read.
-      //           if (
-      //             message.getSender().getUid() !== user.getUid() &&
-      //             !message.getReadAt()
-      //           ) {
-      //             if (
-      //               message.getReceiverType() === CometChat.RECEIVER_TYPE.USER
-      //             ) {
-      //               CometChat.markAsRead(
-      //                 message.getId().toString(),
-      //                 message.getSender().getUid(),
-      //                 message.getReceiverType()
-      //               );
-      //             } else if (
-      //               message.getReceiverType() === CometChat.RECEIVER_TYPE.GROUP
-      //             ) {
-      //               CometChat.markAsRead(
-      //                 message.getId().toString(),
-      //                 message.getReceiverId(),
-      //                 message.getReceiverType()
-      //               );
-      //             }
-
-      //             this.actionGenerated.emit({
-      //               type: enums.MESSAGE__READ,
-      //               payLoad: message,
-      //             });
-      //           }
-      //         });
-
-      //         ++this.times;
-
-      //         let actionGeneratedType = enums.MESSAGE_FETCHED;
-      //         if (scrollToBottom === true) {
-      //           actionGeneratedType = enums.MESSAGE_FETCHED_AGAIN;
-      //         }
-
-      //         if (scrollToTop) {
-      //           actionGeneratedType = enums.OLDER_MESSAGES_FETCHED;
-      //         }
-
-      //         // Only called when the active user changes the the conversation , that is switches to some other person
-      //         // to chat with
-      //         if (newConversation) {
-      //           actionGeneratedType = enums.NEW_CONVERSATION_OPENED;
-      //         }
-
-      //         if (
-      //           (this.times === 1 && actionMessages.length > 5) ||
-      //           (this.times > 1 && actionMessages.length === 30)
-      //         ) {
-      //           this.actionGenerated.emit({
-      //             type: enums.MESSAGE_FETCHED,
-      //             payLoad: messageList,
-      //           });
-      //           this.getMessages(true, false);
-      //         } else {
-      //           this.actionGenerated.emit({
-      //             type: actionGeneratedType,
-      //             payLoad: messageList,
-      //           });
-      //         }
-      //       this.actionGenerated.emit({
-      //           type: enums.NEW_CONVERSATION_OPENED,
-      //           payLoad: messageList,
-      //       });
-      //       },
-      //       (error) => {
-      //          logger("Message fetching failed with error:", error);
-      //       }
-      //     );
-        
-      //   },
-      //   (error) => {
-      //     logger("No Logged In User Found", { error });
-      //   }
-      // );
-
       //  mycode
-     
       var uid = this.localStorageService.get("uid")
       this.userService.getUserById1(uid).subscribe(user => {
         this.loggedInUser = user;
@@ -562,7 +551,8 @@ export class CometChatMessageListComponent
 
         this.messageService.getAllMessageByIdChatRoom(this.item.id_chatroom).subscribe(messageResponse => {
           var messageList = messageResponse.Data[0].content
-          
+
+
           if (messageList.length === 0 && this.messages.length === 0) {
             this.decoratorMessage = COMETCHAT_CONSTANTS.NO_MESSAGES_FOUND;
           } else {
@@ -570,87 +560,89 @@ export class CometChatMessageListComponent
           }
 
           messageList.forEach((message) => {
-          if (
-            // message.category === CometChat.CATEGORY_ACTION &&
-            // message.sender === enums.APP_SYSTEM
 
-            message.id_send === enums.APP_SYSTEM
-          ) {
-            actionMessages.push(message);
+            if (
+              // message.category === CometChat.CATEGORY_ACTION &&
+              // message.sender === enums.APP_SYSTEM
+
+              message.id_send === enums.APP_SYSTEM
+            ) {
+              actionMessages.push(message);
+            }
+
+            //if the sender of the message is not the loggedin user, mark it as read.
+            // if (
+            //   message.sender !== user.uid &&
+            //   !message.getReadAt()
+            // ) {
+            //   if (
+            //     message.receiverType === CometChat.RECEIVER_TYPE.USER
+            //   ) {
+            //     CometChat.markAsRead(
+            //       message.getId().toString(),
+            //       message.getSender().getUid(),
+            //       message.getReceiverType()
+            //     );
+            //   } else if (
+            //     message.getReceiverType() === CometChat.RECEIVER_TYPE.GROUP
+            //   ) {
+            //     CometChat.markAsRead(
+            //       message.getId().toString(),
+            //       message.getReceiverId(),
+            //       message.getReceiverType()
+            //     );
+            //   }
+
+            //   this.actionGenerated.emit({
+            //     type: enums.MESSAGE__READ,
+            //     payLoad: message,
+            //   });
+            // }
+
+          });
+
+          ++this.times;
+
+          let actionGeneratedType = enums.MESSAGE_FETCHED;
+          if (scrollToBottom === true) {
+            actionGeneratedType = enums.MESSAGE_FETCHED_AGAIN;
           }
 
-          //if the sender of the message is not the loggedin user, mark it as read.
-          // if (
-          //   message.sender !== user.uid &&
-          //   !message.getReadAt()
-          // ) {
-          //   if (
-          //     message.receiverType === CometChat.RECEIVER_TYPE.USER
-          //   ) {
-          //     CometChat.markAsRead(
-          //       message.getId().toString(),
-          //       message.getSender().getUid(),
-          //       message.getReceiverType()
-          //     );
-          //   } else if (
-          //     message.getReceiverType() === CometChat.RECEIVER_TYPE.GROUP
-          //   ) {
-          //     CometChat.markAsRead(
-          //       message.getId().toString(),
-          //       message.getReceiverId(),
-          //       message.getReceiverType()
-          //     );
-          //   }
+          if (scrollToTop) {
+            actionGeneratedType = enums.OLDER_MESSAGES_FETCHED;
+          }
 
-          //   this.actionGenerated.emit({
-          //     type: enums.MESSAGE__READ,
-          //     payLoad: message,
-          //   });
-          // }
+          // Only called when the active user changes the the conversation , that is switches to some other person
+          // to chat with
+          if (newConversation) {
+            actionGeneratedType = enums.NEW_CONVERSATION_OPENED;
+          }
 
-        });
+          if (
+            (this.times === 1 && actionMessages.length > 5) ||
+            (this.times > 1 && actionMessages.length === 30)
+          ) {
+            this.actionGenerated.emit({
+              type: enums.MESSAGE_FETCHED,
+              payLoad: messageList,
+            });
+            this.getMessages(true, false);
+          } else {
+            this.actionGenerated.emit({
+              type: actionGeneratedType,
+              payLoad: messageList,
+            });
+          }
 
-        ++this.times;
-
-        let actionGeneratedType = enums.MESSAGE_FETCHED;
-        if (scrollToBottom === true) {
-          actionGeneratedType = enums.MESSAGE_FETCHED_AGAIN;
-        }
-
-        if (scrollToTop) {
-          actionGeneratedType = enums.OLDER_MESSAGES_FETCHED;
-        }
-
-        // Only called when the active user changes the the conversation , that is switches to some other person
-        // to chat with
-        if (newConversation) {
-          actionGeneratedType = enums.NEW_CONVERSATION_OPENED;
-        }
-
-        if (
-          (this.times === 1 && actionMessages.length > 5) ||
-          (this.times > 1 && actionMessages.length === 30)
-        ) {
           this.actionGenerated.emit({
-            type: enums.MESSAGE_FETCHED,
+            type: enums.NEW_CONVERSATION_OPENED,
             payLoad: messageList,
           });
-          this.getMessages(true, false);
-        } else {
-          this.actionGenerated.emit({
-            type: actionGeneratedType,
-            payLoad: messageList,
-          });
-        }
 
-        this.actionGenerated.emit({
-          type: enums.NEW_CONVERSATION_OPENED,
-          payLoad: messageList,
-        });
+          
         })
 
-        // this.messageService.getAllMessageByIdChatRoom1(this.item.id_chatroom).subscribe(messageList => {
-        //   console.log("message List = ===================" + JSON.stringify(messageList))
+        // this.messageService.getAllMessageByIdChatRoom1(this.item.id_chatroom).subscribe(messageList => {          
         //   if (messageList.length === 0 && this.messages.length === 0) {
         //     this.decoratorMessage = COMETCHAT_CONSTANTS.NO_MESSAGES_FOUND;
         //   } else {
@@ -668,7 +660,7 @@ export class CometChatMessageListComponent
         //   }
 
         //   //if the sender of the message is not the loggedin user, mark it as read.
-        //   // if (
+        //   //if (
         //   //   message.sender !== user.uid &&
         //   //   !message.getReadAt()
         //   // ) {
@@ -696,11 +688,12 @@ export class CometChatMessageListComponent
         //   //   });
         //   // }
 
-        // });
+        //  });
 
         // ++this.times;
 
         // let actionGeneratedType = enums.MESSAGE_FETCHED;
+
         // if (scrollToBottom === true) {
         //   actionGeneratedType = enums.MESSAGE_FETCHED_AGAIN;
         // }
@@ -714,6 +707,7 @@ export class CometChatMessageListComponent
         // if (newConversation) {
         //   actionGeneratedType = enums.NEW_CONVERSATION_OPENED;
         // }
+        // console.log('action message' + actionMessages.length)
 
         // if (
         //   (this.times === 1 && actionMessages.length > 5) ||
@@ -740,10 +734,10 @@ export class CometChatMessageListComponent
         //   logger("Message fetching failed with error:", error);
         // })
 
-      },error => {
+      }, error => {
         logger("No Logged In User Found", { error });
       })
-      
+
     } catch (error) {
       logger(error);
     }

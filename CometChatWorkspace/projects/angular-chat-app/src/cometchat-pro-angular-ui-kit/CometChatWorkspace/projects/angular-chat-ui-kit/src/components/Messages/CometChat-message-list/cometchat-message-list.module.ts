@@ -10,12 +10,13 @@ import { CometChatReceiverImageMessageBubble } from "../CometChat-receiver-image
 import { CometChatSenderVideoMessageBubble } from "../CometChat-sender-video-message-bubble/cometchat-sender-video-message-bubble.module";
 import { CometChatReceiverVideoMessageBubble } from "../CometChat-receiver-video-message-bubble/cometchat-receiver-video-message-bubble.module";
 import { CometChatDeleteMessageBubble } from "../CometChat-delete-message-bubble/cometchat-delete-message-bubble.module";
-import { CometChatSenderPollMessageBubble } from "../Extensions/CometChat-sender-poll-message-bubble/cometchat-sender-poll-message-bubble.module";
-import { CometChatReceiverPollMessageBubble } from "../Extensions/CometChat-receiver-poll-message-bubble/cometchat-receiver-poll-message-bubble.module";
-import { CometChatSenderStickerMessageBubble } from "../Extensions/CometChat-sender-sticker-message-bubble/cometchat-sender-sticker-message-bubble.module";
-import { CometChatReceiverStickerMessageBubble } from "../Extensions/CometChat-receiver-sticker-message-bubble/cometchat-receiver-sticker-message-bubble.module";
+//import { CometChatSenderPollMessageBubble } from "../Extensions/CometChat-sender-poll-message-bubble/cometchat-sender-poll-message-bubble.module";
+//import { CometChatReceiverPollMessageBubble } from "../Extensions/CometChat-receiver-poll-message-bubble/cometchat-receiver-poll-message-bubble.module";
+//import { CometChatSenderStickerMessageBubble } from "../Extensions/CometChat-sender-sticker-message-bubble/cometchat-sender-sticker-message-bubble.module";
+//import { CometChatReceiverStickerMessageBubble } from "../Extensions/CometChat-receiver-sticker-message-bubble/cometchat-receiver-sticker-message-bubble.module";
 import { CometChatActionMessageBubble } from "../CometChat-action-message-bubble/cometchat-action-message-bubble.module";
 import { DatePipe } from "@angular/common";
+import { CometChatDeleteMessageBubbleNoUser } from "../comet-chat-delete-message-no-user/comet-chat-delete-no-user.module";
 
 @NgModule({
   declarations: [CometChatMessageListComponent],
@@ -30,11 +31,13 @@ import { DatePipe } from "@angular/common";
     CometChatReceiverVideoMessageBubble,
     CometChatReceiverTextMessageBubble,
     CometChatDeleteMessageBubble,
-    CometChatSenderPollMessageBubble,
-    CometChatReceiverPollMessageBubble,
-    CometChatSenderStickerMessageBubble,
-    CometChatReceiverStickerMessageBubble,
+  //  CometChatSenderPollMessageBubble,
+ //   CometChatReceiverPollMessageBubble,
+ //   CometChatSenderStickerMessageBubble,
+ //   CometChatReceiverStickerMessageBubble,
     CometChatActionMessageBubble,
+    CometChatDeleteMessageBubbleNoUser
+    
   ],
   exports: [CometChatMessageListComponent],
   providers: [DatePipe],

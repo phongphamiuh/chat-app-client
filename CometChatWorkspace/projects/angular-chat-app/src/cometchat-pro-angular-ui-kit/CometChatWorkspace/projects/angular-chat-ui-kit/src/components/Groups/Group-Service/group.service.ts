@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-const publicApi = "http://localhost:3000/Chatroom"
-const publicApiGroupMember = "http://localhost:3000/Chatroom/group/member"
+const publicApi = "http://ec2-52-221-232-82.ap-southeast-1.compute.amazonaws.com:3000/Chatroom"
+const publicApiGroupMember = "http://ec2-52-221-232-82.ap-southeast-1.compute.amazonaws.com:3000/Chatroom/group/member"
 @Injectable({
   providedIn: 'root'
 })
@@ -14,8 +14,11 @@ export class GroupService {
     return this.httpClient.get(publicApi + `/group?id_user=${uid}`)
   }
 
-  createGroup(){
-    
+  createGroup(idUserAdmin: string, chatRoomName: String): Observable<CreateGroupResponse>{
+    const httpOptions = {
+      headers: new HttpHeaders({'Content-Type': 'application/json'})
+    }
+    return this.httpClient.post<CreateGroupResponse>(publicApi + `/group?id_user_admin=${idUserAdmin}&Chatroom_name=${chatRoomName}`, httpOptions)
   }
 
   getAllMemberByGroupId(id_chatroom: String): Observable<GroupMembers[]> {
@@ -45,6 +48,10 @@ export class GroupService {
 
   
 
+}
+
+export interface CreateGroupResponse{
+  chatroom_id: string
 }
 
 export interface GroupMembers {

@@ -30,7 +30,7 @@ export class CometChatSenderTextMessageBubbleComponent implements OnInit {
 
   ngOnInit() {
     try {
-      console.log('message detail: ========' + this.messageDetails)
+      console.log('message detail: ========' + JSON.stringify(this.messageDetails))
       this.checkLinkPreview();
       this.checkReaction = checkMessageForExtensionsData(
         this.messageDetails,

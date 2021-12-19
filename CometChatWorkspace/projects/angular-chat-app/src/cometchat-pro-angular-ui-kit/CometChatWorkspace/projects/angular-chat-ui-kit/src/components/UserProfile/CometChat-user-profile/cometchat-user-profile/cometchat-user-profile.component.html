@@ -4,20 +4,51 @@
   </div>
   <div class="detailStyle">
     <div class="thumbnailStyle">
-      <cometchat-avatar [item]="user"></cometchat-avatar>
+      <cometchat-avatar
+       [item]="user"
+       [userId]="uid">
+      </cometchat-avatar>
     </div>
     <div class="userDetailStyle">
       <div class="userNameStyle">
         {{ name }}
       </div>
       <p class="userStatusStyle">{{ ONLINE }}</p>
+
+      <div class="inputStickyStyle">
+        <div class="stickyAttachmentStyle">
+          <span
+          [title]="ATTACH_IMAGE"
+          (click)="getImage()"
+          class="fileItemStyle"
+          id="image"
+        >
+          <input
+            type="file"
+            accept="image/*"
+            #imagePicker
+            (change)="onImgChange($event)"
+          />
+        </span>
+        <span>
+          Đổi ảnh
+        </span>
+          </div>
+       
+      </div>
+     
+
+      <!-- <p class="friendsAddStyle" (click)="changeImage()"><span>Đổi ảnh</span></p> -->
+      <!-- <span>
+        Đổi ảnh đại diện
+      </span> -->
     </div>
   </div>
   <div class="optionsStyle">
     <!-- <div class="optionTitleStyle">{{ PREFERENCES }}</div> -->
     <div class="optionListStyle">
       <div class="optionStyle PersonInfo">
-        <div class="optionNameStyle">{{ PERSON_INFO }}</div>
+        <div class="optionNameStyle" (click)="showInfoP()">{{ PERSON_INFO }}</div>
       </div>
       <!-- <div class="optionStyle AppInfo">
         <div class="optionNameStyle">{{ APP_INFO }}</div>
@@ -32,7 +63,7 @@
         <div class="optionNameStyle">{{ CHATS }}</div>
       </div> -->
       <div class="optionStyle Logout">
-        <div class="optionNameStyle">{{ LOGOUT }}</div>
+        <div class="optionNameStyle" (click)="logout()">{{ LOGOUT }}</div>
       </div>
     </div>
     <!-- <div class="optionTitleStyle Other">{{ OTHER }}</div>
@@ -48,5 +79,12 @@
       </div>
     </div> -->
   </div>
+
+  <cometchat-info-personal
+  *ngIf="openUpdateProfile"
+  (actionGenerated)="actionHandler($event)"
+  [user]="user"
+  >
+  </cometchat-info-personal>
 </div>
 

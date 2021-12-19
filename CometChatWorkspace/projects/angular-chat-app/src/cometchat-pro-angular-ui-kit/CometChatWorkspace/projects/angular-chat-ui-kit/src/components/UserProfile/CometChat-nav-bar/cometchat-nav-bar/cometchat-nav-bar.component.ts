@@ -29,7 +29,9 @@ export class CometChatNavBarComponent implements OnInit {
   curentItem;
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.openUserList()
+  }
 
   /**
    * Toggles the List to be opened on user clicked

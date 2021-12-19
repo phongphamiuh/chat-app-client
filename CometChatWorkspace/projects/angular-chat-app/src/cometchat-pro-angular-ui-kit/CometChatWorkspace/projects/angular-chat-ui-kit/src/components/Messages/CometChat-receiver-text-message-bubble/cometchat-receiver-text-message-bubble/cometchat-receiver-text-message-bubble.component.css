@@ -74,6 +74,12 @@
   text-align: left;
   width: auto;
 }
+
+.messageTxtStyle {
+  text-align: center;
+}
+
+
 .messageTxtStyle a:hover {
   color: #0432ff;
 }

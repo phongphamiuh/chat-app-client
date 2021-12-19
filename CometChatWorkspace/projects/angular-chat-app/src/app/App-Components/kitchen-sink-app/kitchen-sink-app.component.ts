@@ -14,15 +14,6 @@ import { AuthenticationService } from "../../Services/authen-service/authenticat
 export class KitchenSinkAppComponent implements OnInit {
   userEmail: string = "phongpham";
   userPassword: string = "";
-  // superHero1 = "https://data-us.cometchat.io/assets/images/avatars/ironman.png";
-  // superHero2 =
-  //   "https://data-us.cometchat.io/assets/images/avatars/captainamerica.png";
-  // superHero3 =
-  //   "https://data-us.cometchat.io/assets/images/avatars/spiderman.png";
-  // superHero4 =
-  //   "https://data-us.cometchat.io/assets/images/avatars/wolverine.png";
-  // superHero5 = "https://data-us.cometchat.io/assets/images/avatars/cyclops.png";
-
   constructor(private router: Router, private authService: AuthenticationService, private formBuilder: FormBuilder) {}
 
   onLoginError: boolean = false;

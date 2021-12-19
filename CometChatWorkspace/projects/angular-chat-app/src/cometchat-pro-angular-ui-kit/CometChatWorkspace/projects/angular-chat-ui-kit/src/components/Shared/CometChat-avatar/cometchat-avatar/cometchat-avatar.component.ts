@@ -8,6 +8,7 @@ import {
 import { DomSanitizer } from "@angular/platform-browser";
 import * as enums from "../../../../utils/enums";
 import { logger } from "../../../../utils/common";
+import { UserService } from "../../../Users/User-Service/user.service";
 
 @Component({
   selector: "cometchat-avatar",
@@ -16,13 +17,19 @@ import { logger } from "../../../../utils/common";
 })
 export class CometChatAvatarComponent implements OnInit, OnChanges {
   @Input() item = null;
-
+  @Input() user = null;
   @Input() avatar: any =
     "https://toppng.com/uploads/preview/avatar-png-115540218987bthtxfhls.png";
   @Input() userStatus = "";
   @Input() enableUserStatus: boolean = true;
 
-  constructor(private _sanitizer: DomSanitizer) {}
+  @Input() userHasId = null;
+  @Input() userId = null;
+
+  @Input() idUser = null;
+  @Input() idChatRoom = null;
+
+  constructor(private _sanitizer: DomSanitizer, private userService: UserService) {}
 
   ngOnChanges(change: SimpleChanges) {
     try {
@@ -37,10 +44,59 @@ export class CometChatAvatarComponent implements OnInit, OnChanges {
       logger(error);
     }
   }
-
+  
   ngOnInit() {
     try {
+      console.log("user has di ........" + JSON.stringify(this.item))
+
+      // this.userService.getUserNotPersonal(this.item.id_chatroom, this.item.id_user).subscribe(conver => {
+      //   console.log("conver" + JSON.stringify(conver))
+      // })
+      
+      // if(this.userHasId) {
+      //   this.avatar = this._sanitizer.bypassSecurityTrustResourceUrl(
+      //           this.getAvatar(
+      //             this.userHasId,
+      //             this.userHasId.charAt(0).toUpperCase()
+      //           )
+      //       );
+      // }
+      
+      // else if(this.userId) {
+      //   this.userService.getUserById1(this.userId).subscribe(user => {
+      //     this.avatar = this._sanitizer.bypassSecurityTrustResourceUrl(
+      //       this.getAvatar(
+      //         user.name,
+      //         user.name.charAt(0).toUpperCase()
+      //       )
+      //   );
+      //   })
+      // }
+      // else{
+      //   this.setAvatarIfNotPresent();
+      // }
+
       this.setAvatarIfNotPresent();
+      // this.userService.getUserById1(this.userHasId).subscribe(user => {
+
+      //   console.log('user' + JSON.stringify(user))
+
+      //   if(user.url_avatar !== "" && user.url_avatar !== null) {
+      //     this.avatar = user.url_avatar
+      //   }else{
+      //     this.avatar = this._sanitizer.bypassSecurityTrustResourceUrl(
+      //       this.getAvatar(
+      //         user.id_user,
+      //         user.name.charAt(0).toUpperCase()
+      //       )
+      //     );
+      //   }
+      //   this.userStatus = user.status
+      // })
+
+      //console.log(this.userHasId)
+
+     
     } catch (error) {
       logger(error);
     }
@@ -51,28 +107,81 @@ export class CometChatAvatarComponent implements OnInit, OnChanges {
    */
   setAvatarIfNotPresent() {
     try {
-      if (this.item) {
-        this.avatar = this.item.avatar || this.item.icon;
-        this.userStatus = this.item.status;
+      
+      if(this.userId) {
 
-        if (this.avatar === undefined || this.avatar === null) {
-          if (this.item.hasOwnProperty(enums.GUID)) {
+          this.userService.getUserById1(this.userId).subscribe(user => {
+            if(user.url_avatar === undefined || user.url_avatar === null || user.url_avatar === "" ){
+              this.avatar = this._sanitizer.bypassSecurityTrustResourceUrl(
+                this.getAvatar(
+                  user.id_user,
+                  user.name.charAt(0).toUpperCase()
+                )
+              );
+            }else{
+              this.avatar = user.url_avatar
+              this.userStatus = user.status
+            }
+          })
+
+
+      }else{
+        if (this.item) {
+
+          this.userService.getUserNotPersonal(this.item.id_chatroom, this.item.id_user).subscribe(conver => {
+            this.userService.getUserById1(conver.id_user).subscribe(user => {
+              console.log('sadkajsda' + JSON.stringify(user))
+              
+              if(user.url_avatar === undefined || user.url_avatar === null || user.url_avatar === "" ){
+                this.avatar = this._sanitizer.bypassSecurityTrustResourceUrl(
+                  this.getAvatar(
+                    user.id_user,
+                    user.name.charAt(0).toUpperCase()
+                  )
+                );
+              }else{
+                this.avatar = user.url_avatar
+                this.userStatus = user.status
+              }
+            })
+          })
+  
+          // this.avatar = this.item.avatar || this.item.icon;
+          // this.userStatus = this.item.status;
+  
+          if(this.item.is_group_chat == 1 ){
             this.avatar = this._sanitizer.bypassSecurityTrustResourceUrl(
               this.getAvatar(
-                this.item.guid,
-                this.item.name.charAt(0).toUpperCase()
-              )
-            );
-          } else {
-            this.avatar = this._sanitizer.bypassSecurityTrustResourceUrl(
-              this.getAvatar(
-                this.item.uid,
-                this.item.name.charAt(0).toUpperCase()
+                this.item.id_chatroom,
+                this.item.name_chatroom.charAt(0).toUpperCase()
               )
             );
           }
+  
+          if (this.avatar === undefined || this.avatar === null || this.avatar === "") {
+            if (this.item.hasOwnProperty(enums.GUID)) {
+              this.avatar = this._sanitizer.bypassSecurityTrustResourceUrl(
+                this.getAvatar(
+                  this.item.guid,
+                  this.item.name.charAt(0).toUpperCase()
+                )
+              );
+            } else {
+              this.avatar = this._sanitizer.bypassSecurityTrustResourceUrl(
+                this.getAvatar(
+                  this.item.uid,
+                  this.item.name.charAt(0).toUpperCase()
+                )
+              );
+            }
+          }
+          
         }
       }
+
+      
+
+
     } catch (error) {
       logger(error);
     }

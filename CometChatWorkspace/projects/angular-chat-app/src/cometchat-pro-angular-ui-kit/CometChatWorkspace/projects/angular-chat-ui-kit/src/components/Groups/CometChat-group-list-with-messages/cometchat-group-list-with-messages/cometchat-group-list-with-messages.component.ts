@@ -372,23 +372,26 @@ export class CometChatGroupListWithMessagesComponent implements OnInit {
   membersAdded = (members) => {
     try {
       const messageList = [];
-      members.forEach((eachMember) => {
-        const message = `${this.loggedInUser.name} added ${eachMember.name}`;
-        const date: any = new Date();
-        const sentAt: any = (date / 1000) | 0;
-        const messageObj = {
-          category: CometChat.CATEGORY_ACTION,
-          message: message,
-          type: enums.ACTION_TYPE_GROUPMEMBER,
-          sentAt: sentAt,
-        };
-        messageList.push(messageObj);
-      });
 
-      this.groupMessage = messageList;
+      // members.forEach((eachMember) => {
+        
+      //   const message = `${this.loggedInUser.name} added ${eachMember.name}`;
+      //   const date: any = new Date();
+      //   const sentAt: any = (date / 1000) | 0;
+      //   const messageObj = {
+      //     category: CometChat.CATEGORY_ACTION,
+      //     message: message,
+      //     type: enums.ACTION_TYPE_GROUPMEMBER,
+      //     sentAt: sentAt,
+      //   };
+      //   messageList.push(messageObj);
+      // });
+
+      //this.groupMessage = messageList;
     } catch (error) {
       logger(error);
     }
+    
   };
 
   /**
@@ -397,10 +400,10 @@ export class CometChatGroupListWithMessagesComponent implements OnInit {
    */
   updateMembersCount = (item, count) => {
     try {
-      const group = Object.assign({}, this.item, { membersCount: count });
+      // const group = Object.assign({}, this.item, { membersCount: count });
 
-      this.item = group;
-      this.groupToUpdate = group;
+      // this.item = group;
+      // this.groupToUpdate = group;
     } catch (error) {
       logger(error);
     }

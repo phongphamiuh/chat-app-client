@@ -3,6 +3,7 @@ import { checkMessageForExtensionsData } from "../../../../utils/common";
 import * as enums from "../../../../utils/enums";
 import { logger } from "../../../../utils/common";
 import { CometChat } from "@cometchat-pro/chat";
+import { UserService } from "../../../Users/User-Service/user.service";
 
 @Component({
   selector: "cometchat-receiver-video-message-bubble",
@@ -14,6 +15,7 @@ export class CometChatReceiverVideoMessageBubbleComponent implements OnInit {
   @Input() showToolTip = true;
   @Input() showReplyCount = true;
   @Input() loggedInUser;
+  @Input() type: String = "";
   @Output() actionGenerated: EventEmitter<any> = new EventEmitter();
 
   avatar = null;
@@ -29,9 +31,11 @@ export class CometChatReceiverVideoMessageBubbleComponent implements OnInit {
     messageFrom: enums.RECEIVER,
   });
 
+  username: string = '';
+
   GROUP: String = CometChat.RECEIVER_TYPE.GROUP;
 
-  constructor() {}
+  constructor(private userService: UserService) {}
 
   ngOnInit() {
     try {
@@ -39,6 +43,10 @@ export class CometChatReceiverVideoMessageBubbleComponent implements OnInit {
         this.messageDetails,
         enums.REACTIONS
       );
+
+      this.userService.getUserById1(this.messageDetails.id_send).subscribe(user => {
+          this.username = user.name
+      })
 
       /**
        *  If Group then displays Avatar And Name
@@ -63,7 +71,7 @@ export class CometChatReceiverVideoMessageBubbleComponent implements OnInit {
    */
   getUrl() {
     try {
-      this.videoUrl = this.messageDetails.data.url;
+      this.videoUrl = this.messageDetails.fileUrl;
     } catch (error) {
       logger(error);
     }

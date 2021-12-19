@@ -183,3 +183,14 @@
   cursor: pointer;
   width: 35%;
 }
+
+/* mycode */
+.friendsAddStyle1{
+  display: block;
+  height: 20px;
+  background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDE2IDIwIj48Zz48Zz48cGF0aCBmaWxsPSIjMTQxNDE0IiBkPSJNMTUuMjg2IDE1LjI5Yy42My42My4xOCAxLjcxLS43MSAxLjcxSDEuNDA2Yy0uODkgMC0xLjMzLTEuMDgtLjctMS43MUwxLjk5NiAxNFY5YzAtMy4wOCAxLjYzLTUuNjQgNC41LTYuMzJWMmMwLS44My42Ny0xLjUgMS41LTEuNXMxLjUuNjcgMS41IDEuNXYuNjhjMi44Ni42OCA0LjUgMy4yNSA0LjUgNi4zMnY1ek01Ljk5NiAxOGg0YTIgMiAwIDEgMS00IDB6Ii8+PC9nPjwvZz48L3N2Zz4=")
+    right center no-repeat;
+    background-size: 16px;
+  cursor: pointer;
+  width: 35%;
+}

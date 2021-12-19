@@ -3,6 +3,9 @@ import { CometChat } from "@cometchat-pro/chat";
 import * as enums from "../../../../utils/enums";
 import { COMETCHAT_CONSTANTS } from "../../../../utils/messageConstants";
 import { logger } from "../../../../utils/common";
+import { GroupService } from "../../Group-Service/group.service";
+import { LocalStorageService } from "../../../Out-Service/local-storage.service";
+import { MessageService } from "../../../Messages/Message-Service/message.service";
 
 @Component({
   selector: "cometchat-create-group",
@@ -27,7 +30,9 @@ export class CometChatCreateGroupComponent implements OnInit {
 
   @Output() actionGenerated: EventEmitter<any> = new EventEmitter();
 
-  constructor() {}
+  constructor(private groupSerivice: GroupService, 
+    private localStorage: LocalStorageService,
+    private chatService: MessageService) {}
 
   ngOnInit() {}
 
@@ -113,6 +118,14 @@ export class CometChatCreateGroupComponent implements OnInit {
    * @param
    */
   createGroup() {
+    var admin = this.localStorage.get("uid")
+    this.groupSerivice.createGroup(admin, this.name).subscribe(res => {
+      this.actionGenerated.emit({
+        type: enums.GROUP_CREATED,
+        payLoad: res,
+      });
+    })
+
     try {
       if (!this.validate()) {
         return false;

@@ -186,7 +186,7 @@ export class UserAddFriendsComponent implements OnInit {
           this.userService.checkUserIsFriend(uid, user.id_user).subscribe(res => {
             if(res != null) this.error = "Người dùng này đã là bạn bè "
             else {
-              
+              alert('Gửi lời mời kết bạn thành công')
               this.userService.sendRequestAddFriend(uid,user.id_user).subscribe(res => {
                 this.resetGroupData();
                 this.actionGenerated.emit({

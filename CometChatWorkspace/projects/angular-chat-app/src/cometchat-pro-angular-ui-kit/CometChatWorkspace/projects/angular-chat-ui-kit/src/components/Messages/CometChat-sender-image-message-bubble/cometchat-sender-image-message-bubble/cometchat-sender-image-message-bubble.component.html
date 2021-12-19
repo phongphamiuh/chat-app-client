@@ -1,10 +1,10 @@
 <div class="messageContainerStyle">
-  <!-- <cometchat-message-actions
+  <cometchat-message-actions
     class="tool"
     [messageDetails]="messageDetails"
     (actionGenerated)="actionHandler($event)"
     *ngIf="showToolTip"
-  ></cometchat-message-actions> -->
+  ></cometchat-message-actions>
   <div class="messageWrapperStyle">
     <div class="messageImgWrapper" (click)="open()">
       <div *ngIf="imageLoader" class="imageLoaderStyle">&nbsp;</div>

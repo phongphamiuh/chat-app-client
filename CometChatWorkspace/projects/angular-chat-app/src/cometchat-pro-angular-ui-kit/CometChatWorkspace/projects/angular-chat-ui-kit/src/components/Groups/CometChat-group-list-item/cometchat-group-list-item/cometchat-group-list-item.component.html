@@ -1,10 +1,10 @@
 <div
   class="listItem"
   [ngClass]="{
-    selectedGroupStyle: group?.guid === selectedGroup?.guid
+    selectedGroupStyle: group?.id_chatroom === selectedGroup?.id_chatroom
   }"
-  (click)="groupClicked(group)"
->
+  (click)="groupClicked(group)">
+
   <div class="itemThumbnailStyle">
     <cometchat-avatar [item]="group"></cometchat-avatar>
   </div>

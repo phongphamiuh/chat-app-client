@@ -46,6 +46,7 @@
 .tableCaptionStyle {
   font-size: 20px;
   margin-bottom: 15px;
+  margin: 10px 10px;
   font-weight: bold;
   text-align: left;
 }
@@ -107,7 +108,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 45%;
+  height: 1%;
 }
 
 .contactMsgTxtStyle {

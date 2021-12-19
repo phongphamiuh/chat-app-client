@@ -23,8 +23,12 @@ export class CometChatReadReceiptComponent implements OnInit {
 
   ngOnInit() {
     try {
+
+      console.log("message read  ..... " + JSON.stringify(this.messageDetails))
       this.getDeliveryStatus();
       this.time = getSentAtTime(this.messageDetails);
+
+      console.log('time send' + this.time)
     } catch (error) {
       logger(error);
     }
@@ -35,7 +39,7 @@ export class CometChatReadReceiptComponent implements OnInit {
    */
   getDeliveryStatus() {
     try {
-      if (this.messageDetails.hasOwnProperty(enums.SENT_AT)) {
+      if (this.messageDetails.hasOwnProperty(enums.SEND_AT)) {
         this.tickStatus = this.SENT;
 
         if (this.messageDetails.hasOwnProperty(enums.DELIVERED_AT)) {

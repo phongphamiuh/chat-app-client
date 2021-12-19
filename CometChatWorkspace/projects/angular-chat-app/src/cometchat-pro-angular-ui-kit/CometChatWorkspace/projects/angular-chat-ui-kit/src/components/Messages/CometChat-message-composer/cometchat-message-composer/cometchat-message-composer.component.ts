@@ -23,7 +23,7 @@ import { logger } from "../../../../utils/common";
 
 import { OUTGOING_MESSAGE_SOUND } from "../../../../resources/audio/outgoingMessageSound";
 import { COMETCHAT_CONSTANTS } from "../../../../utils/messageConstants";
-import { Message, MessageService, Data, MessageLtn, Messages, MessagesFile } from "../../Message-Service/message.service";
+import { Message, MessageService, Data, MessageLtn, Messages, MessagesFile, MessagesV } from "../../Message-Service/message.service";
 import { LocalStorageService } from "../../../Out-Service/local-storage.service";
 import { WebSocketAPI } from "../../Message-Service/WebSocketAPI";
 @Component({
@@ -357,6 +357,14 @@ export class CometChatMessageComposerComponent implements OnInit, OnChanges {
       sentAt: ms,
     }
 
+    var messages1: MessagesV = {
+      id_chatroom: this.item.id_chatroom,
+      id_send: this.localStorageService.get("uid"),
+      message: textMsg,
+      type: "text",
+      sendAt: ms,
+    }
+
  
 
     // this.messageService.refreshWhenSendMessage.subscribe(() => {
@@ -438,7 +446,10 @@ export class CometChatMessageComposerComponent implements OnInit, OnChanges {
       // End Typing Indicator Function
       this.endTyping();
 
-      this.messageService.sendMessage(this.item.id_chatroom,messages).subscribe(message => {
+     this.messageService.sendMessage1(this.item.id_chatroom, textMsg, this.localStorageService.get("uid"), ms, 'text', null).subscribe(message => {
+     // this.messageService.sendMessage(this.item.id_chatroom,messages).subscribe(message => {
+
+        console.log('message .......................qwew ' + JSON.stringify(message))
         this.messageInput = "";
         this.messageSending = false;
          // this Message Emitted will Be Appended to the existing Message List
@@ -446,9 +457,15 @@ export class CometChatMessageComposerComponent implements OnInit, OnChanges {
           type: enums.MESSAGE_COMPOSED,
           payLoad: [messages],
         });
+
         console.log('message : ' + message)
-        var messageJson = JSON.stringify(messages)  
-        this.messageService.sendMessageSocket(messageJson)
+
+        var messageJson = JSON.stringify(messages1)  
+        //this.messageService.sendMessageSocket(messageJson)
+
+        // send message websocket
+
+        this.messageService.sendMessageWebsocket(messageJson)
   
         //clearing Message Input Box
         this.messageInput = "";
@@ -574,6 +591,44 @@ export class CometChatMessageComposerComponent implements OnInit, OnChanges {
             uploadedFile.name,
             uploadedFile
           );
+
+          this.messageService.updateFile(newFile).subscribe(res => {
+            let ms = Date.now();
+
+            var messages: MessagesFile = {
+              id_chatroom: this.item.id_chatroom,
+              id_send: this.localStorageService.get("uid"),
+              message: newFile.name,
+              type: "video",
+              sendAt: ms,
+              fileUrl: res.url
+            }
+            this.messageService.sendMessageFile1(this.item.id_chatroom, messages.message, messages.id_send, ms,  messages.type, messages.fileUrl).subscribe(message => {
+           // this.messageService.sendMessageFile(this.item.id_chatroom,messages).subscribe(message => {
+              this.messageInput = "";
+              this.messageSending = false;
+               // this Message Emitted will Be Appended to the existing Message List
+               this.actionGenerated.emit({
+                type: enums.MESSAGE_COMPOSED,
+                payLoad: [messages],
+              });
+
+              var messageJson = JSON.stringify(messages)  
+              //this.messageService.sendMessageSocket(messageJson)
+
+              // send message websocket
+              this.messageService.sendMessageWebsocket(messageJson)
+        
+              //clearing Message Input Box
+              this.messageInput = "";
+
+            },error => {
+              logger("Message sending failed with error:", error);
+                  this.messageSending = false;
+            })
+
+          })
+
           this.sendMediaMessage(newFile, CometChat.MESSAGE_TYPE.VIDEO);
         },
         false
@@ -638,6 +693,58 @@ export class CometChatMessageComposerComponent implements OnInit, OnChanges {
             uploadedFile.name,
             uploadedFile
           );
+
+          this.messageService.updateFile(newFile).subscribe(res => {
+            let ms = Date.now();
+            console.log('res..............................' + JSON.stringify(res))
+            let resI = res.url 
+
+            // var messages: MessagesFile = {
+            //   id_chatroom: this.item.id_chatroom,
+            //   id_send: this.localStorageService.get("uid"),
+            //   message: newFile.name,
+            //   type: "image",
+            //   sentAt: ms,
+            //   fileUrl: res
+            // }
+
+            console.log("////////////////////" + resI)
+            var messages: MessagesFile = {
+              id_chatroom: this.item.id_chatroom,
+              id_send: this.localStorageService.get("uid"),
+              message: newFile.name,
+              type: "image",
+              sendAt: ms,
+              fileUrl: resI
+            }
+            this.messageService.sendMessageFile1(this.item.id_chatroom, messages.message, messages.id_send, ms,  messages.type, messages.fileUrl).subscribe(message => {
+           // this.messageService.sendMessageFile(this.item.id_chatroom,messages).subscribe(message => {
+              this.messageInput = "";
+              this.messageSending = false;
+               // this Message Emitted will Be Appended to the existing Message List
+               this.actionGenerated.emit({
+                type: enums.MESSAGE_COMPOSED,
+                payLoad: [messages],
+              });
+
+              var messageJson = JSON.stringify(messages)  
+                
+              console.log("message json .................." + messageJson)
+              //this.messageService.sendMessageSocket(messageJson)
+
+              // send message websocket
+              this.messageService.sendMessageWebsocket(messageJson)
+        
+              //clearing Message Input Box
+              this.messageInput = "";
+
+            },error => {
+              logger("Message sending failed with error:", error);
+                  this.messageSending = false;
+            })
+
+          })
+
           this.sendMediaMessage(newFile, CometChat.MESSAGE_TYPE.IMAGE);
         },
         false
@@ -673,18 +780,21 @@ export class CometChatMessageComposerComponent implements OnInit, OnChanges {
             uploadedFile.name,
             uploadedFile
           );
+
           this.messageService.updateFile(newFile).subscribe(res => {
-            console.log(JSON.stringify(res))
+
             let ms = Date.now();
+
             var messages: MessagesFile = {
               id_chatroom: this.item.id_chatroom,
               id_send: this.localStorageService.get("uid"),
               message: newFile.name,
               type: "file",
-              sentAt: ms,
-              fileUrl: res
+              sendAt: ms,
+              fileUrl: res.url
             }
-            this.messageService.sendMessageFile(this.item.id_chatroom,messages).subscribe(message => {
+            this.messageService.sendMessageFile1(this.item.id_chatroom, messages.message, messages.id_send, ms,  messages.type, messages.fileUrl).subscribe(message => {
+            //this.messageService.sendMessageFile(this.item.id_chatroom,messages).subscribe(message => {
               this.messageInput = "";
               this.messageSending = false;
                // this Message Emitted will Be Appended to the existing Message List
@@ -694,7 +804,10 @@ export class CometChatMessageComposerComponent implements OnInit, OnChanges {
               });
               console.log('message : ' + message)
               var messageJson = JSON.stringify(messages)  
-              this.messageService.sendMessageSocket(messageJson)
+              //this.messageService.sendMessageSocket(messageJson)
+
+              // send message websocket
+              this.messageService.sendMessageWebsocket(messageJson)
         
               //clearing Message Input Box
               this.messageInput = "";
@@ -708,6 +821,7 @@ export class CometChatMessageComposerComponent implements OnInit, OnChanges {
               logger("Message sending failed with error:", error);
                   this.messageSending = false;
             })
+
           })
 
           //this.sendMediaMessage(newFile, CometChat.MESSAGE_TYPE.FILE);

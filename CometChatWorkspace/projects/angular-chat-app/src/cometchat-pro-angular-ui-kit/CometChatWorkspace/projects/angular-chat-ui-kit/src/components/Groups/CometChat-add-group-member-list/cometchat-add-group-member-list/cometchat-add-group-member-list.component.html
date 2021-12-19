@@ -2,13 +2,28 @@
   <cometchat-backdrop></cometchat-backdrop>
   <div class="modalWrapperStyle">
     <span class="modalCloseStyle" (click)="closeAddMembersView()"></span>
+    <div class="tableCaptionStyle">
+      {{
+        USERS
+      }}
+    </div>
+    <div class="tableSearchStyle">
+      <input
+            class="searchInputStyle"
+            type="text"
+            autoComplete="off"
+            [placeholder]="SEARCH"
+            (keyup)="searchUsers($event)"
+          />
+    </div>
     <div class="modalBodyStyle">
       <table class="modalTableStyle">
-        <caption class="tableCaptionStyle">
+        <!-- <caption class="tableCaptionStyle">
           {{
             USERS
           }}
         </caption>
+        
         <caption class="tableSearchStyle">
           <input
             class="searchInputStyle"
@@ -17,10 +32,10 @@
             [placeholder]="SEARCH"
             (keyup)="searchUsers($event)"
           />
-        </caption>
+        </caption> -->
 
         <caption class="contactMsgStyle" *ngIf="decoratorMessage !== ''">
-          <p class="contactMsgTxtStyle">{{ decoratorMessage }}</p>
+          <!-- <p class="contactMsgTxtStyle">{{ decoratorMessage }}</p> -->
         </caption>
 
         <tbody class="tableBodyStyle" (scroll)="handleScroll($event)">

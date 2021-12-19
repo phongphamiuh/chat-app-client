@@ -3,6 +3,7 @@ import { checkMessageForExtensionsData } from "../../../../utils/common";
 import * as enums from "../../../../utils/enums";
 import { logger } from "../../../../utils/common";
 import { CometChat } from "@cometchat-pro/chat";
+import { User, UserService } from "../../../Users/User-Service/user.service";
 
 @Component({
   selector: "cometchat-receiver-file-message-bubble",
@@ -13,6 +14,7 @@ export class CometChatReceiverFileMessageBubbleComponent implements OnInit {
   @Input() messageDetails = null;
   name: string;
   url: string;
+  @Input() type: String = "";
   avatar = null;
   avatarName: string = null;
   avatarIfGroup: boolean = false;
@@ -25,16 +27,26 @@ export class CometChatReceiverFileMessageBubbleComponent implements OnInit {
   @Output() actionGenerated: EventEmitter<any> = new EventEmitter();
 
   GROUP: String = CometChat.RECEIVER_TYPE.GROUP;
-
-  constructor() {}
+  user = null
+  constructor(private userService: UserService) {}
 
   ngOnInit() {
     try {
+
+      this.userService.getUserById1(this.messageDetails.id_send).subscribe(user => {
+        this.user = user;
+      })
+
       this.checkReaction = checkMessageForExtensionsData(
         this.messageDetails,
         enums.REACTIONS
       );
-
+      this.avatarIfGroup = true;
+      this.userService.getUserById1(this.messageDetails.id_send).subscribe(user => {
+        this.user = user;
+        this.avatarName = user.name
+        //this.avatar = this.messageDetails.sender.avatar;
+      })
       //If Group then displays Avatar And Name
       if (this.messageDetails.receiverType === CometChat.RECEIVER_TYPE.GROUP) {
         this.avatarIfGroup = true;
@@ -49,8 +61,8 @@ export class CometChatReceiverFileMessageBubbleComponent implements OnInit {
         this.avatar = this.messageDetails.sender.avatar;
       }
       //Gets File name and file url
-      this.name = this.messageDetails.data.attachments[0].name;
-      this.url = this.messageDetails.data.attachments[0].url;
+      this.url = this.messageDetails.fileUrl;
+      this.name = this.messageDetails.message;
     } catch (error) {
       logger(error);
     }

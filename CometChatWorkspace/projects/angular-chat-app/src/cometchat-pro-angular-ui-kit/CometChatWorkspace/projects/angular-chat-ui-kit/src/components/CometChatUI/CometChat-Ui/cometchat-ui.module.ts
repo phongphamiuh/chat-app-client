@@ -7,8 +7,8 @@ import { CometChatUserDetails } from "../../Users/CometChat-user-details/cometch
 //import { CometChatMessageThread } from "../../Messages/CometChat-message-thread/cometchat-message-thread.module";
 import { CometChatImageViewer } from "../../Messages/CometChat-image-viewer/cometchat-image-viewer.module";
 import { CometChatGroupDetails } from "../../Groups/CometChat-group-details/cometchat-group-details.module";
-import { CometChatIncomingCall } from "../../Calls/CometChat-incoming-call/cometchat-incoming-call.module";
-import { CometChatOutgoingCall } from "../../Calls/CometChat-outgoing-call/cometchat-outgoing-call.module";
+//import { CometChatIncomingCall } from "../../Calls/CometChat-incoming-call/cometchat-incoming-call.module";
+//import { CometChatOutgoingCall } from "../../Calls/CometChat-outgoing-call/cometchat-outgoing-call.module";
 
 @NgModule({
   declarations: [CometChatUIComponent],
@@ -20,8 +20,8 @@ import { CometChatOutgoingCall } from "../../Calls/CometChat-outgoing-call/comet
 //    CometChatMessageThread,
     CometChatImageViewer,
     CometChatGroupDetails,
-    CometChatIncomingCall,
-    CometChatOutgoingCall,
+    // CometChatIncomingCall,
+    // CometChatOutgoingCall,
   ],
   exports: [CometChatUIComponent],
 })

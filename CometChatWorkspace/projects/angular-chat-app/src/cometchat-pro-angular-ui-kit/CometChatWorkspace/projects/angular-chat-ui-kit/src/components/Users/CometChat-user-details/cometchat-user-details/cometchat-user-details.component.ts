@@ -10,7 +10,7 @@ import {
 import * as enums from "../../../../utils/enums";
 import { COMETCHAT_CONSTANTS } from "../../../../utils/messageConstants";
 import { logger } from "../../../../utils/common";
-import { UserService } from "../../User-Service/user.service";
+import { User, UserService } from "../../User-Service/user.service";
 import { LocalStorageService } from "../../../Out-Service/local-storage.service";
 @Component({
   selector: "cometchat-user-details",
@@ -32,9 +32,15 @@ export class CometChatUserDetailsComponent implements OnInit, OnChanges {
 
   ngOnChanges(change: SimpleChanges) {
     try {
-      if (change[enums.ITEM]) {
-        this.getBlockStatus(change[enums.ITEM].currentValue);
-      }
+        console.log("user" + JSON.stringify(this.item))
+      this.userService.getUserById1(this.item.id_user).subscribe(user => {
+        
+      })
+      // if (change[enums.ITEM]) {
+      //   this.getBlockStatus(change[enums.ITEM].currentValue);
+      // }
+
+
     } catch (error) {
       logger(error);
     }
@@ -92,9 +98,15 @@ export class CometChatUserDetailsComponent implements OnInit, OnChanges {
   deleteUser(){
     if(confirm("Bạn có chắc chắn muốn xóa không")) {
       let uid = this.localStorage.get("uid")
-      this.userService.deleteFriend(uid, this.item.id_user).subscribe(message => {
-        window.location.reload()
+      console.log(this.item.id_user)
+      this.userService.getUserNotPersonal(this.item.id_chatroom,uid).subscribe(user => {
+        this.userService.deleteFriend(uid, user.id_user).subscribe(message => {
+          console.log("deleteUser" + message)
+         window.location.reload()
+        })
+        
       })
+      
     }
   }
 }

@@ -14,7 +14,8 @@ import { INCOMING_MESSAGE_SOUND } from "../../../../resources/audio/incomingMess
 import * as enums from "../../../../utils/enums";
 import { COMETCHAT_CONSTANTS } from "../../../../utils/messageConstants";
 import { logger } from "../../../../utils/common";
-import { Message, MessageService } from "../../Message-Service/message.service";
+import { Message, MessageService, OnlyMessage } from "../../Message-Service/message.service";
+import { UserService } from "../../../Users/User-Service/user.service";
 @Component({
   selector: "cometchat-messages",
   templateUrl: "./cometchat-messages.component.html",
@@ -40,13 +41,16 @@ export class CometChatMessagesComponent implements OnInit, OnChanges {
   reachedTopOfConversation = false;
   scrollVariable = 0;
 
+  user = null
+
   reactionName = COMETCHAT_CONSTANTS.HEART;
   messageToReact = null;
 
-  constructor(private messageService: MessageService) {}
+  constructor(private messageService: MessageService,private userService: UserService) { }
 
   ngOnChanges(change: SimpleChanges) {
     try {
+
       if (change[enums.COMPOSED_THREAD_MESSAGE]) {
         // There is a valid Thread parent message , than update it's reply count
         if (change[enums.COMPOSED_THREAD_MESSAGE].currentValue) {
@@ -83,7 +87,18 @@ export class CometChatMessagesComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+
+    console.log('group message ..........' + this.groupMessage)
+
+
+    this.userService.getUserById1(this.item.yMDTAhEhNseu8rtuYBq0mIyfUAy1).subscribe(user => {
+      this.user = user
+    })
+    //   this.messageService.removeMessageListener1().subscribe(rs => {
+    //     console.log('message aslkdalksdhasjkdhas' + JSON.stringify(rs)) 
+    //  })
+  }
 
   /**
    * Updating the reply count of Thread Parent Message
@@ -121,17 +136,18 @@ export class CometChatMessagesComponent implements OnInit, OnChanges {
     //console.log("action Handler here")
     try {
       let messages = action.payLoad;
-      
+
       let data = action.payLoad;
-      
+
       switch (action.type) {
         case enums.CUSTOM_MESSAGE_RECEIVE:
         case enums.MESSAGE_RECEIVED: {
-          var a = JSON.stringify(messages).replace(/\\/g,'')  
+          var a = JSON.stringify(messages).replace(/\\/g, '')
 
           const message = messages[0];
 
           console.log('messages received: ' + JSON.stringify(messages))
+
           if (message.parentMessageId) {
             this.updateReplyCount(messages);
           } else {
@@ -154,6 +170,8 @@ export class CometChatMessagesComponent implements OnInit, OnChanges {
           break;
         }
         case enums.OLDER_MESSAGES_FETCHED: {
+
+          console.log("old message fetch")
           this.reachedTopOfConversation = false;
 
           //No Need for below actions if there is nothing to prepend
@@ -171,7 +189,6 @@ export class CometChatMessagesComponent implements OnInit, OnChanges {
           break;
         }
         case enums.MESSAGE_COMPOSED: {
-          console.log("message composed---------- " + JSON.stringify(messages))
           //this.appendMessage(messages);
           this.actionGenerated.emit({
             type: enums.MESSAGE_COMPOSED,
@@ -316,8 +333,8 @@ export class CometChatMessagesComponent implements OnInit, OnChanges {
   setMessages(messages) {
     try {
       this.messageList = [...messages];
-
       this.scrollToBottomOfChatWindow();
+
     } catch (error) {
       logger(error);
     }
@@ -343,11 +360,81 @@ export class CometChatMessagesComponent implements OnInit, OnChanges {
 
     console.log("append Message ======================")
     try {
-      let dummy = [...this.messageList];
+      // let dummy = [...this.messageList];
+      // this.messageList = [...dummy, ...messages];
+      // this.scrollToBottomOfChatWindow();
 
-      this.messageList = [...dummy, ...messages];
+      if (messages[0].isDelete === undefined) {
+        console.log("has id_send")
+        let dummy = [...this.messageList];
+        this.messageList = [...dummy, ...messages];
+        this.scrollToBottomOfChatWindow();
+      } else {
+        if (messages[0].isDelete === false) {
+          console.log("has id_send")
+          let dummy = [...this.messageList];
+          this.messageList = [...dummy, ...messages];
+          this.scrollToBottomOfChatWindow();
+        } else {
+          let deletedMessage = messages[0]
+          console.log('delete message === ' + JSON.stringify(deletedMessage))
+          const messagelist = [...this.messageList];
+          let messageKey = messagelist.findIndex(
+            (message) => message.sentAt === deletedMessage.sentAt
+          );
 
-      this.scrollToBottomOfChatWindow();
+          console.log('message Key' + JSON.stringify(messageKey))
+
+          if (messageKey > -1) {
+            let messageObj = { ...messagelist[messageKey] };
+
+            console.log('message object ' + JSON.stringify(messageObj))
+
+            let newMessageObj = Object.assign({}, messageObj, deletedMessage);
+
+            console.log('new object' + JSON.stringify(newMessageObj))
+
+            //messagelist.splice(messageKey, 1, messageObj);
+            messagelist.splice(messageKey, 1, messageObj);
+            this.messageList = [...messagelist];
+            //this.messageList = []
+
+          }
+        }
+      }
+
+      // console.log(messages[0].isDelete === undefined && messages[0].isDelete.isDelete === false)
+      // if(messages[0].id_send !== '' && messages[0].id_send !== undefined){
+      //   console.log("has id_send")
+      //   let dummy = [...this.messageList];
+      // this.messageList = [...dummy, ...messages];
+      // this.scrollToBottomOfChatWindow();
+      // }else{
+
+      //   let deletedMessage = messages[0]
+      //   console.log('delete message === ' + JSON.stringify(deletedMessage))
+      //   const messagelist = [...this.messageList];
+      //   let messageKey = messagelist.findIndex(
+      //     (message) => message.sentAt === deletedMessage.sentAt
+      //   );
+
+      //   console.log('message Key'+JSON.stringify(messageKey))
+
+      //   if (messageKey > -1) {
+      //     let messageObj = { ...messagelist[messageKey] };
+
+      //     console.log('message object '+JSON.stringify(messageObj))
+
+      //     let newMessageObj = Object.assign({}, messageObj, deletedMessage);
+
+      //     console.log(JSON.stringify(newMessageObj))
+
+      //     messagelist.splice(messageKey, 1, newMessageObj);
+
+      //     this.messageList = [...messagelist]; 
+
+      //   }
+      // }
     } catch (error) {
       logger(error);
     }
@@ -408,31 +495,44 @@ export class CometChatMessagesComponent implements OnInit, OnChanges {
    */
   deleteMessage = (message) => {
     try {
+      console.log('delete ...........................................asdasd')
       const messageId = message.id;
-      
+
       const d = new Date();
       let ms = Date.now();
 
-      this.messageService.deleteMessage(this.item.id_chatroom, message,ms, message.id_send).subscribe(deletedMessage => {
+      this.messageService.deleteMessage(this.item.id_chatroom, message, ms, message.id_send).subscribe(deletedMessage => {
+
         this.removeMessages([deletedMessage]);
 
-          const messageList = [...this.messageList];
-          let messageKey = messageList.findIndex((m) => m.sentAt === message.id);
+        const messageList = [...this.messageList];
 
+        let messageKey = messageList.findIndex((m) => m.sentAt === message.id);
+
+        // this.actionGenerated.emit({
+        //   type: enums.THREAD_PARENT_MESSAGE_UPDATED,
+        //   updateType: enums.DELETE,
+        //   payLoad: [deletedMessage],
+        // });
+
+        // if (messageList.length - messageKey === 1 && !message.replyCount) {
+        //   console.log('message delete.........')
+        //   this.actionGenerated.emit({
+        //     type: enums.MESSAGE_DELETE,
+        //     payLoad: [deletedMessage],
+        //   });
+        // }
+
+        if (messageList.length - messageKey === 1) {
+          console.log('message delete.........')
           this.actionGenerated.emit({
-            type: enums.THREAD_PARENT_MESSAGE_UPDATED,
-            updateType: enums.DELETE,
+            type: enums.MESSAGE_DELETE,
             payLoad: [deletedMessage],
           });
+        }
 
-          if (messageList.length - messageKey === 1 && !message.replyCount) {
-            this.actionGenerated.emit({
-              type: enums.MESSAGE_DELETE,
-              payLoad: [deletedMessage],
-            });
-          }
-      },error => {
-        
+      }, error => {
+
       })
       // CometChat.deleteMessage(messageId)
       //   .then((deletedMessage) => {
@@ -514,12 +614,11 @@ export class CometChatMessagesComponent implements OnInit, OnChanges {
    */
   removeMessages = (messages) => {
     try {
-
-      
       const deletedMessage = messages[0];
       const messagelist = [...this.messageList];
       console.log(JSON.stringify(this.messageList))
       console.log('delete message = ' + JSON.stringify(deletedMessage))
+
       let messageKey = messagelist.findIndex(
         (message) => message.sentAt === deletedMessage.sentAt
       );
@@ -533,10 +632,38 @@ export class CometChatMessagesComponent implements OnInit, OnChanges {
 
         let newMessageObj = Object.assign({}, messageObj, deletedMessage);
 
+        console.log('message object' + JSON.stringify(newMessageObj))
+
         messagelist.splice(messageKey, 1, newMessageObj);
 
         this.messageList = [...messagelist];
+
+        // var messagesOnly: OnlyMessage = {
+        //   id_chatroom: this.item.id_chatroom,
+        //   sentAt: deletedMessage.sentAt,
+        //   message: deletedMessage.message,
+        //   type : deletedMessage.type,
+        //   id_send: deletedMessage.id_send,
+        //   isDelete: true,
+        //   deleted_by: deletedMessage.deletedBy,
+        //   deleted_at: deletedMessage.deletedAt
+        // }
+
+        // this.messageService.sendMessageWebsocket(JSON.stringify(messagesOnly))
       }
+
+      // const deletedMessage = messages[0];
+      // var messagesOnly: OnlyMessage = {
+      //   id_chatroom: this.item.id_chatroom,
+      //   sentAt: deletedMessage.sentAt,
+      //   message: deletedMessage.message,
+      //   type: deletedMessage.type,
+      //   id_send: deletedMessage.id_send,
+      //   isDelete: true,
+      //   deleted_by: deletedMessage.deletedBy,
+      //   deleted_at: deletedMessage.deletedAt
+      // }
+      // this.messageService.sendMessageWebsocket(JSON.stringify(messagesOnly))
     } catch (error) {
       logger(error);
     }

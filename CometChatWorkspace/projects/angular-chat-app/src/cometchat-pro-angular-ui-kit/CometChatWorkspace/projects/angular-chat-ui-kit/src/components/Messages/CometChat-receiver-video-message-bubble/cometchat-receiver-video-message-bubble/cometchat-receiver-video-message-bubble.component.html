@@ -11,9 +11,10 @@
   ></cometchat-message-actions> -->
   <div class="messageWrapperStyle">
     <!--Avatar-->
-    <div class="messageThumbnailStyle" *ngIf="avatarIfGroup">
+    <div class="messageThumbnailStyle" *ngIf="type == GROUP">
       <cometchat-avatar
         [item]="messageDetails?.sender"
+        [userId]="messageDetails?.id_send"
         [enableUserStatus]="false"
         class="avatarStyle"
       ></cometchat-avatar>
@@ -21,9 +22,9 @@
     <!--Avatar Ends-->
     <div class="messageDetailStyle">
       <!--Name-->
-      <div class="nameWrapperStyle">
+      <div class="nameWrapperStyle" *ngIf="type == GROUP">
         <span class="nameStyle">
-          {{ name }}
+          {{ username }}
         </span>
       </div>
       <!--Name End-->

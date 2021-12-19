@@ -15,13 +15,14 @@
     <div class="messageThumbnailStyle" *ngIf="type == GROUP">
       <cometchat-avatar
         [item]="messageDetails?.sender"
+        [userId]="messageDetails?.id_send"
         [enableUserStatus]="false"
       ></cometchat-avatar>
     </div>
     <div class="messageDetailStyle">
       <!--name--->
       <div class="nameWrapperStyle" *ngIf="type == GROUP">
-        <span class="nameStyle"> {{ messageDetails?.sender?.name }} </span>
+        <span class="nameStyle"> {{ user?.name }} </span>
       </div>
 
       <div class="messageTxtContainerStyle">
@@ -62,13 +63,13 @@
           </div>
         </div>
       </div>
-      <!-- <cometchat-message-reactions
+      <cometchat-message-reactions
         *ngIf="checkReaction"
         [messageDetails]="messageDetails"
         [loggedInUser]="loggedInUser"
         (actionGenerated)="actionHandler($event)"
-      ></cometchat-message-reactions> -->
-      <!-- <div class="messageInfoWrapperStyle">
+      ></cometchat-message-reactions>
+      <div class="messageInfoWrapperStyle">
         <cometchat-read-receipt
           [messageDetails]="messageDetails"
           [displayReadReciept]="false"
@@ -79,7 +80,7 @@
           (actionGenerated)="actionHandler($event)"
         >
         </cometchat-threaded-message-reply-count>
-      </div> -->
+      </div>
     </div>
   </div>
 </div>

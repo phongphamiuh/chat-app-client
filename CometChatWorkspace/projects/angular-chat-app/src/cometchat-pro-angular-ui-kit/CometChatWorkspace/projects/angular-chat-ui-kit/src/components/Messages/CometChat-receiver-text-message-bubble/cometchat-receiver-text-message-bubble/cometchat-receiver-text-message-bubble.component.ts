@@ -4,6 +4,7 @@ import { COMETCHAT_CONSTANTS } from "../../../../utils/messageConstants";
 import * as enums from "../../../../utils/enums";
 import { logger } from "../../../../utils/common";
 import { CometChat } from "@cometchat-pro/chat";
+import { UserService } from "../../../Users/User-Service/user.service";
 
 @Component({
   selector: "cometchat-receiver-text-message-bubble",
@@ -31,18 +32,27 @@ export class CometChatReceiverTextMessageBubbleComponent implements OnInit {
 
   GROUP: String = CometChat.RECEIVER_TYPE.GROUP;
 
-  constructor() {}
+  user = null
+  username = null
+
+  constructor(private userService: UserService) {}
 
   ngOnInit() {
-    try {
-      this.checkLinkPreview();
-      this.checkReaction = checkMessageForExtensionsData(
-        this.messageDetails,
-        enums.REACTIONS
-      );
-    } catch (error) {
-      logger(error);
-    }
+
+    this.userService.getUserById1(this.messageDetails.id_send).subscribe(user => {
+      this.user = user;
+      this.username = user.name
+      console.log(user.name)
+    })
+    // try {
+    //   this.checkLinkPreview();
+    //   this.checkReaction = checkMessageForExtensionsData(
+    //     this.messageDetails,
+    //     enums.REACTIONS
+    //   );
+    // } catch (error) {
+    //   logger(error);
+    // }
   }
 
   /**
